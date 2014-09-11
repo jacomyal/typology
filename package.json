@@ -1,0 +1,29 @@
+{
+  "name": "typology",
+  "version": "0.0.1",
+  "description": "Validate your data against structural definitions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jacomyal/typology.git"
+  },
+  "keywords": [
+    "validation",
+    "types"
+  ],
+  "authors": [
+    "Yomguithereal",
+    "jacomyal"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jacomyal/typology/issues"
+  },
+  "homepage": "https://github.com/jacomyal/typology",
+  "devDependencies": {
+    "mocha": "~1.21.4"
+  }
+}
