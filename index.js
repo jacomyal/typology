@@ -32,27 +32,27 @@ var types = {
         id = o.id;
         type = o.type;
       } else
-        throw 'If types.add is called with one arguments, ' +
-              'it has to be an object';
+        throw new Error('If types.add is called with one argument, ' +
+                        'this one has to be an object.');
     } else if (arguments.length === 2) {
       if (typeof a1 !== 'string' || !a1)
-        throw 'If types.add is called with more than one arguments, ' +
-              'the first one must be the string id';
+        throw new Error('If types.add is called with more than one argument, ' +
+                        'the first one must be the string id.');
       else
         id = a1;
 
       type = a2;
     } else
-      throw 'types.add has to be called with one or three arguments';
+      throw new Error('types.add has to be called with one or three arguments.');
 
     if (this.get(id) !== 'string' || id.length === 0)
-      throw 'A type requires an string id';
+      throw new Error('A type requires an string id.');
 
     if (customTypes[id] !== undefined && customTypes[id] !== 'proto')
-      throw 'The type "' + id + '" already exists';
+      throw new Error('The type "' + id + '" already exists.');
 
     if (~nativeTypes.indexOf(id))
-      throw '"' + id + '" is a reserved type name';
+      throw new Error('"' + id + '" is a reserved type name.');
 
     customTypes[id] = 1;
 
@@ -67,9 +67,9 @@ var types = {
       }
 
     if ((this.get(type) !== 'function') && !this.isValid(type))
-      throw 'A type requires a valid "type" describing the type. ' +
-            'It can be a valid type or a function that test if an object ' +
-            'matches the type.';
+      throw new Error('A type requires a valid definition. ' +
+                      'This one can be a preexistant type or else a function ' +
+                      'testing givent objects.');
 
     // Effectively add the type:
     customTypes[id] = (o === undefined) ?
@@ -106,7 +106,7 @@ var types = {
       a = type.replace(/^\?/, '').split(/\|/);
       for (i in a)
         if (nativeTypes.indexOf(a[i]) < 0 && customTypes[a[i]] === undefined) {
-          throw 'Invalid type';
+          throw new Error('Invalid type');
           return false;
         }
 
@@ -142,7 +142,7 @@ var types = {
         return false;
 
       if (type.length !== 1) {
-        throw 'Invalid type';
+        throw new Error('Invalid type');
       }
 
       for (k in obj)
