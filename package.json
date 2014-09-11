@@ -1,7 +1,7 @@
 {
   "name": "typology",
   "version": "0.0.1",
-  "description": "Validate your data against structural definitions.",
+  "description": "A type checking library for Node.js and the browser.",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec"
