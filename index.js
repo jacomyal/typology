@@ -106,7 +106,7 @@ var types = {
       a = type.replace(/^\?/, '').split(/\|/);
       for (i in a)
         if (nativeTypes.indexOf(a[i]) < 0 && customTypes[a[i]] === undefined) {
-          throw new Error('Invalid type');
+          throw new Error('Invalid type.');
           return false;
         }
 
