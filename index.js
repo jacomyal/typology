@@ -142,7 +142,7 @@ var types = {
         return false;
 
       if (type.length !== 1) {
-        throw new Error('Invalid type');
+        throw new Error('Invalid type.');
       }
 
       for (k in obj)
