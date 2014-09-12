@@ -1,6 +1,6 @@
 # Typology
 
-Typology is a lightweight type checking library for Node.js and the browser (through [Browserify](http://browserify.org/)).
+Typology is a lightweight type checking library for Node.js and the browser.
 
 It can validate variables against native JavaScript types as well as against custom types you can define.
 
@@ -64,7 +64,7 @@ var customType = {
 
 <table>
   <tr>
-    <td><b>Expresion</b></td>
+    <td><b>Expression</b></td>
     <td><b>Description</b></td>
     <td><b>Examples</b></td>
     <td><b>Validates</b></td>
@@ -96,7 +96,7 @@ var customType = {
   <tr>
     <td><code>[type]</code></td>
     <td>lists</td>
-    <td><code>['?number']</code></td>
+    <td><code>['number']</code></td>
     <td><code>[1, 2, 3]</code></td>
   </tr>
 </table>
