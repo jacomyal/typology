@@ -1,5 +1,5 @@
 var assert = require('assert'),
-    types = require('../index.js');
+    types = require('../typology.js');
 
 describe('Typology', function() {
 

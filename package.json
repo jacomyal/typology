@@ -2,7 +2,7 @@
   "name": "typology",
   "version": "0.0.1",
   "description": "A type checking library for Node.js and the browser.",
-  "main": "index.js",
+  "main": "typology.js",
   "scripts": {
     "test": "mocha -R spec"
   },
