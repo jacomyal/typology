@@ -1,7 +1,7 @@
 /**
  * typology.js - a type checking library for Node.js and the browser,
  *
- * Version: 0.0.1
+ * Version: 0.1.0
  * Sources: http://github.com/jacomyal/typology
  * Doc:     http://github.com/jacomyal/typology#readme
  *
@@ -47,7 +47,7 @@
   }
 
   var types = {
-    version: '0.0.1',
+    version: '0.1.0',
     add: function(a1, a2) {
       var o,
           k,
