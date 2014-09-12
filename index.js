@@ -73,7 +73,8 @@ var types = {
 
       type = a2;
     } else
-      throw new Error('types.add has to be called with one or three arguments.');
+      throw new Error('types.add has to be called ' +
+                      'with one or three arguments.');
 
     if (this.get(id) !== 'string' || id.length === 0)
       throw new Error('A type requires an string id.');
@@ -99,7 +100,7 @@ var types = {
     if ((this.get(type) !== 'function') && !this.isValid(type))
       throw new Error('A type requires a valid definition. ' +
                       'This one can be a preexistant type or else a function ' +
-                      'testing givent objects.');
+                      'testing given objects.');
 
     // Effectively add the type:
     customTypes[id] = (o === undefined) ?
