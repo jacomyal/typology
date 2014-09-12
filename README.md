@@ -2,7 +2,7 @@
 
 Typology is a lightweight type checking library for Node.js and the browser (through [Browserify](http://browserify.org/)).
 
-It can validate variables against native JavaScript types as well as against custom types you would want to define yourself.
+It can validate variables against native JavaScript types as well as against custom types you can define.
 
 ## Installation
 
@@ -38,7 +38,7 @@ types.get(/abc/);
 
 ### Deal with custom types
 
-A custom type can be defined either by a function returning a boolean or an expressive string or object describing the type you want to create.
+A custom type can be either be defined by a function returning a boolean or an expressive string or object describing the type you want to check.
 
 *Example*
 
@@ -64,40 +64,40 @@ var customType = {
 
 <table>
   <tr>
-    <td>**Expresion**</td>
-    <td>**Description**</td>
-    <td>**Examples**</td>
-    <td>**Validates**</td>
+    <td><b>Expresion</b></td>
+    <td><b>Description</b></td>
+    <td><b>Examples</b></td>
+    <td><b>Validates</b></td>
   </tr>
   <tr>
-    <td>`type`</td>
+    <td><code>type</code></td>
     <td>required</td>
-    <td>`'string'`</td>
-    <td>`'hello'`</td>
+    <td><code>'string'</code></td>
+    <td><code>'hello'</code></td>
   </tr>
   <tr>
-    <td>`?type`</td>
+    <td><code>?type</code></td>
     <td>optional</td>
-    <td>`'?string'`</td>
-    <td>`'hello'`, `undefined`, `null`</td>
+    <td><code>'?string'</code></td>
+    <td><code>'hello'</code>, <code>undefined</code>, <code>null</code></td>
   </tr>
   <tr>
-    <td>`type1|type2`</td>
+    <td><code>type1|type2</code></td>
     <td>multi-types</td>
-    <td>`'string|number'`</td>
-    <td>`'hello'`, `45`, `2.34`</td>
+    <td><code>'string|number'</code></td>
+    <td><code>'hello'</code>, <code>45</code>, <code>2.34</code></td>
   </tr>
   <tr>
-    <td>`{prop: type}`</td>
+    <td><code>{prop: type}</code></td>
     <td>complex</td>
-    <td>`{firstname: 'string'}`</td>
-    <td>`{firstname: 'Joachim'}`</td>
+    <td><code>{firstname: 'string'}</code></td>
+    <td><code>{firstname: 'Joachim'}</code></td>
   </tr>
   <tr>
-    <td>`[type]`</td>
+    <td><code>[type]</code></td>
     <td>lists</td>
-    <td>`['?number']`</td>
-    <td>`[1, 2, 3]`</td>
+    <td><code>['?number']</code></td>
+    <td><code>[1, 2, 3]</code></td>
   </tr>
 </table>
 
