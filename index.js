@@ -47,6 +47,7 @@ for (k in classes) {
 }
 
 var types = {
+  version: '0.0.1',
   add: function(a1, a2) {
     var o,
         k,
