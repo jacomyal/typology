@@ -27,7 +27,7 @@
  * from, out of or in connection with the software or the use or other dealings
  * in the Software.
  */
-;(function(global) {
+(function(global) {
   'use strict';
 
   var k,
