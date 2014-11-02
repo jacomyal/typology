@@ -16,9 +16,7 @@ npm install typology
 npm install git+https://github.com/jacomyal/typology.git
 ```
 
-Include the `typology.js` file client-side if you do not want to use Browserify or a similar library.
-
-Note that it will export a `types` variable to the global scope for you to use the library.
+Include the [`typology.js`](./typology.js) (or the minified version [`typology.min.js`](./typology.min.js)) file client-side if you do not want to use Browserify or a similar library.
 
 ## Usage
 

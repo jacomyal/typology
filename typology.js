@@ -217,10 +217,15 @@
     return types.isValid(v);
   });
 
+  // Export:
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports)
       exports = module.exports = types;
     exports.types = types;
-  }
-  global.types = types;
+  } else if (typeof define === 'function' && define.amd)
+    define('typology', [], function() {
+      return types;
+    });
+  else
+    this.types = types;
 })(this);
