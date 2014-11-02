@@ -36,7 +36,7 @@ types.get(/abc/);
 // Native types being:
 // 'boolean', 'number', 'string'
 // 'function', 'array', 'date'
-// 'regexp', 'date', 'object'
+// 'regexp', 'object'
 // 'null', 'undefined'
 ```
 
@@ -49,7 +49,8 @@ A custom type can be either be defined by a function returning a boolean or an e
 ```js
 // Type defined by a function
 var customType = function(variable) {
-  return variable.length > 2 && variable.length <= 10;
+  // Here is an example to know if a variable is an integer:
+  return typeof variable === 'number' && variable === (variable | 0);
 };
 
 // Type defined by an expressive string
