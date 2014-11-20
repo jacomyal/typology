@@ -32,9 +32,17 @@
 
   var k,
       className,
-      classes = (
-        'Boolean Number String Function Array Date RegExp Object'
-      ).split(' '),
+      classes = [
+        'Arguments',
+        'Boolean',
+        'Number',
+        'String',
+        'Function',
+        'Array',
+        'Date',
+        'RegExp',
+        'Object'
+      ],
       class2type = {},
       nativeTypes = ['*'],
       customTypes = {};

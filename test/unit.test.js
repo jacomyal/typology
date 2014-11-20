@@ -14,6 +14,9 @@ describe('Typology', function() {
     assert.deepEqual(types.get({a: 1, b: 2}), 'object', 'Object succeeds');
     assert.deepEqual(types.get(null), 'null', 'Null succeeds');
     assert.deepEqual(types.get(undefined), 'undefined', 'Undefined succeeds');
+    (function() {
+      assert.deepEqual(types.get(arguments), 'arguments', 'Arguments succeeds');
+    })();
   });
 
   it('types.isValid', function() {

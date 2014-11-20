@@ -33,8 +33,8 @@ types.get(/abc/);
 
 // Native types being:
 // 'boolean', 'number', 'string'
-// 'function', 'array', 'date'
-// 'regexp', 'object'
+// 'function', 'array', 'arguments'
+// 'regexp', 'date', 'object'
 // 'null', 'undefined'
 ```
 
