@@ -1,6 +1,6 @@
 {
   "name": "typology",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A type checking library for Node.js and the browser.",
   "main": "typology.js",
   "scripts": {
