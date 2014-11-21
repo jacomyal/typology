@@ -35,7 +35,7 @@ types.get(/abc/);
 // 'boolean', 'number', 'string'
 // 'function', 'array', 'arguments'
 // 'regexp', 'date', 'object'
-// 'null', 'undefined'
+// 'null', 'undefined', 'primitive'
 ```
 
 ### Deal with custom types

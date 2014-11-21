@@ -33,6 +33,7 @@ describe('Typology', function() {
     assert.deepEqual(types.isValid('string|array'), true, '"string|array" validity succeeds');
     assert.deepEqual(types.isValid('?string|array'), true, '"?string|array" validity succeeds');
     assert.deepEqual(types.isValid('boolean'), true, '"boolean" validity succeeds');
+    assert.deepEqual(types.isValid('primitive'), true, '"primitive" validity succeeds');
     assert.deepEqual(types.isValid({a: 'string', b: 'object'}), true, '{a: "string", b: "object"} validity succeeds');
     assert.deepEqual(types.isValid({a: 'string', b: {a: 'string'}}), true, '{a: "string", b: {a: "string"}} validity succeeds');
     assert.deepEqual(types.isValid({a: '?string|array', b: '?*'}), true, '{a: "?string|array", b: "?*"} validity succeeds');
@@ -109,6 +110,17 @@ describe('Typology', function() {
     assert.throws(function() {
       types.check({a: 'abc', b: '12'}, {a: 'sstring'});
     }, Error);
+
+    // The special case of the "primitive" type:
+    assert.equal(types.check(123, 'primitive'), true);
+    assert.equal(types.check('abc', 'primitive'), true);
+    assert.equal(types.check(undefined, 'primitive'), true);
+    assert.equal(types.check(null, 'primitive'), true);
+    assert.equal(types.check(true, 'primitive'), true);
+    assert.equal(types.check(new Date(), 'primitive'), false);
+    assert.equal(types.check({}, 'primitive'), false);
+    assert.equal(types.check([], 'primitive'), false);
+    assert.equal(types.check(Object.create(null), 'primitive'), false);
   });
 
   it('types.add', function() {

@@ -140,6 +140,7 @@
       var a,
           i,
           k,
+          optional = false,
           typeOf = this.get(obj);
 
       if (this.get(type) === 'string') {
@@ -150,10 +151,10 @@
             return false;
           }
 
-        if (obj === null || obj === undefined)
-          return !!type.match(/^\?/, '');
-        else
+        if (type.match(/^\?/)) {
+          optional = true;
           type = type.replace(/^\?/, '');
+        }
 
         for (i in a)
           if (customTypes[a[i]])
@@ -164,7 +165,10 @@
             )
               return true;
 
-        return !!(~a.indexOf('*') || ~a.indexOf(typeOf));
+        if (obj === null || obj === undefined)
+          return optional;
+        else
+          return !!(~a.indexOf('*') || ~a.indexOf(typeOf));
       } else if (this.get(type) === 'object') {
         if (typeOf !== 'object')
           return false;
@@ -223,6 +227,11 @@
   // Add a type "type" to shortcut the isValid method:
   types.add('type', function(v) {
     return types.isValid(v);
+  });
+
+  // Add a type "primitive" to match every primitive types (including null):
+  types.add('primitive', function(v) {
+    return !v || !(v instanceof Object || typeof v === 'object');
   });
 
   // Export:
