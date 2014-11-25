@@ -73,31 +73,31 @@ var customType = {
     <td><b>Validates</b></td>
   </tr>
   <tr>
-    <td><code>type</code></td>
+    <td><code>'type'</code></td>
     <td>required</td>
     <td><code>'string'</code></td>
     <td><code>'hello'</code></td>
   </tr>
   <tr>
-    <td><code>?type</code></td>
+    <td><code>'?type'</code></td>
     <td>optional</td>
     <td><code>'?string'</code></td>
     <td><code>'hello'</code>, <code>undefined</code>, <code>null</code></td>
   </tr>
   <tr>
-    <td><code>type1|type2</code></td>
+    <td><code>'type1|type2'</code></td>
     <td>multi-types</td>
     <td><code>'string|number'</code></td>
     <td><code>'hello'</code>, <code>45</code>, <code>2.34</code></td>
   </tr>
   <tr>
-    <td><code>{prop: type}</code></td>
+    <td><code>{prop: 'type'}</code></td>
     <td>complex</td>
     <td><code>{firstname: 'string'}</code></td>
     <td><code>{firstname: 'Joachim'}</code></td>
   </tr>
   <tr>
-    <td><code>[type]</code></td>
+    <td><code>['type']</code></td>
     <td>lists</td>
     <td><code>['number']</code></td>
     <td><code>[1, 2, 3]</code></td>
