@@ -127,6 +127,8 @@
       for (k in tmp)
         if (k !== id)
           delete customTypes[k];
+
+      return this;
     },
     has: function(key) {
       return !!customTypes[key];

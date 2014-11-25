@@ -224,5 +224,8 @@ describe('Typology', function() {
         a: 42
       }
     }, 's1'), false, 'double recursive types still check wrong keys (level 2)');
+
+    // Returns this
+    assert.strictEqual(types.add('f1', '?string'), types, 'returns types object aka this');
   });
 });
