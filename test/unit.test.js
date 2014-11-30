@@ -1,5 +1,6 @@
 var assert = require('assert'),
-    types = require('../typology.js');
+    types = require('../typology.js'),
+    Typology = types.Typology;
 
 describe('Typology', function() {
 
@@ -239,5 +240,17 @@ describe('Typology', function() {
 
     // Returns this
     assert.strictEqual(types.add('f1', '?string'), types, 'returns types object aka this');
+  });
+
+  it('types.Typology', function() {
+    var customTypology = new Typology();
+
+    // Does a custom typology respects its own enclosure?
+    assert.strictEqual(customTypology.isValid('s1'), false);
+
+    customTypology.add('non-object', '!object');
+
+    assert.strictEqual(customTypology.isValid('non-object'), true);
+    assert.strictEqual(types.isValid('non-object'), false);
   });
 });
