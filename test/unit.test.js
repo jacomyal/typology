@@ -252,5 +252,19 @@ describe('Typology', function() {
 
     assert.strictEqual(customTypology.isValid('non-object'), true);
     assert.strictEqual(types.isValid('non-object'), false);
+
+    var loadedTypology = new Typology({
+      napoleon: function(v) {
+        return v === 'Napoleon' || v === 'Bonaparte';
+      }
+    });
+
+    assert.strictEqual(loadedTypology.isValid('napoleon'), true);
+    assert.strictEqual(loadedTypology.check('Napoleon', 'napoleon'), true);
+    assert.strictEqual(loadedTypology.check('Napoleon', '!napoleon'), false);
+
+    assert.throws(function() {
+      new Typology(42);
+    }, Error);
   });
 });

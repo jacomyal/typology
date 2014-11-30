@@ -54,7 +54,8 @@
   }
 
   // Main object
-  function Typology() {
+  function Typology(defs) {
+    defs = defs || {};
 
     // Properties
     this.customTypes = {};
@@ -68,6 +69,13 @@
     this.add('primitive', function(v) {
       return !v || !(v instanceof Object || typeof v === 'object');
     });
+
+    // Adding custom types at instantiation
+    if (this.get(defs) !== 'object')
+      throw Error('Invalid argument.');
+
+    for (var k in defs)
+      this.add(k, defs[k]);
   }
 
   // Prototype
