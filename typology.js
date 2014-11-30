@@ -143,10 +143,11 @@
           i,
           k,
           optional = false,
+          exclusive = false,
           typeOf = this.get(obj);
 
       if (this.get(type) === 'string') {
-        a = type.replace(/^\?/, '').split(/\|/);
+        a = type.replace(/^[?!]/, '').split(/\|/);
         for (i in a)
           if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes)) {
             throw new Error('Invalid type.');
@@ -158,6 +159,11 @@
           type = type.replace(/^\?/, '');
         }
 
+        if (type.match(/^!/)) {
+          exclusive = true;
+          type = type.replace(/^!/, '');
+        }
+
         for (i in a)
           if (customTypes[a[i]])
             if (
@@ -165,12 +171,14 @@
               (customTypes[a[i]].type(obj) === true) :
               this.check(obj, customTypes[a[i]].type)
             )
-              return true;
+              return !exclusive;
 
         if (obj === null || obj === undefined)
-          return optional;
+          return !exclusive ? optional : !optional;
         else
-          return !!(~a.indexOf('*') || ~a.indexOf(typeOf));
+          return !exclusive ?
+            !!(~a.indexOf('*') || ~a.indexOf(typeOf)) :
+            !(~a.indexOf('*') || ~a.indexOf(typeOf));
       } else if (this.get(type) === 'object') {
         if (typeOf !== 'object')
           return false;
@@ -205,7 +213,7 @@
           i;
 
       if (this.get(type) === 'string') {
-        a = type.replace(/^\?/, '').split(/\|/);
+        a = type.replace(/^[?!]/, '').split(/\|/);
         for (i in a)
           if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes))
             return false;

@@ -49,6 +49,8 @@ describe('Typology', function() {
     assert.deepEqual(types.isValid('string|?array'), false, '"string|?array" invalidity succeeds');
     assert.deepEqual(types.isValid([]), false, '[] invalidity succeeds');
     assert.deepEqual(types.isValid(['string', 'number']), false, '["string", "number"] invalidity succeeds');
+    assert.deepEqual(types.isValid('!string'), true, '"!string" validity succeeds');
+    assert.deepEqual(types.isValid('!string|object'), true, '"!string|object" validity succeeds.');
     assert.deepEqual(types.check('boolean', 'type'), true, 'types.check(val, "type") works with valid types.');
     assert.deepEqual(types.check('null', 'type'), false, 'types.check(val, "type") works with unvalid types.');
   });
@@ -102,6 +104,9 @@ describe('Typology', function() {
     assert.deepEqual(types.check({a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: {a: 'string'}}), false, '{a: "abc", b: {a: 1, b: 2}} does not match {a: "string", b: {a: "string"}}');
     assert.deepEqual(types.check({a: 'abc', b: 'def'}, {a: 'string', b: {a: 'string'}}), false, '{a: "abc", b: "def"} does not match {a: "string", b: {a: "string"}}');
     assert.deepEqual(types.check(42, {a: '?string|array', b: '?*'}), false, '42 does not match {a: "?string|array", b: "?*"}');
+    assert.deepEqual(types.check('hello', '!object'), true, '"hello" does match "!object"');
+    assert.deepEqual(types.check('hello', '!object|string'), false, '"hello" does not match "!object|string"');
+    assert.deepEqual(types.check({hello: 'world'}, '!string'), true, '{hello: "world"} does match "!string"');
 
     assert.throws(function() {
       types.check('abc', 'string|?array');
@@ -224,6 +229,13 @@ describe('Typology', function() {
         a: 42
       }
     }, 's1'), false, 'double recursive types still check wrong keys (level 2)');
+
+    types.add('non-primitive', '!primitive');
+
+    assert.strictEqual(types.isValid('non-primitive'), true, 'type.isValid("non-primitive") is true');
+    assert.strictEqual(types.check({hello: 'world'}, 'non-primitive'), true);
+    assert.strictEqual(types.check(42, 'non-primitive'), false);
+    assert.strictEqual(types.check('hello', 'non-primitive'), false);
 
     // Returns this
     assert.strictEqual(types.add('f1', '?string'), types, 'returns types object aka this');
