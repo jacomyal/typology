@@ -1,7 +1,7 @@
 /**
  * typology.js - A data validation library for Node.js and the browser,
  *
- * Version: 0.1.1
+ * Version: 0.2.0
  * Sources: http://github.com/jacomyal/typology
  * Doc:     http://github.com/jacomyal/typology#readme
  *
