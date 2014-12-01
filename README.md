@@ -102,9 +102,15 @@ var customType = {
     <td><code>['number']</code></td>
     <td><code>[1, 2, 3]</code></td>
   </tr>
+  <tr>
+    <td><code>'!type'</code></td>
+    <td>exclusive</td>
+    <td><code>'!string'</code></td>
+    <td><code>42</code></td>
+  </tr>
 </table>
 
-Note also that expression can be combined. For instance `'?string|number'` means an optional string or number variable.
+Note also that expression can be combined. For instance `'?string|number'` means an optional string or number variable and `'!string|object'` means anything but a string or an object.
 
 *Overkill example*
 
@@ -144,26 +150,29 @@ types.check(
 >>> false
 ```
 
-#### Add a custom type for later user
+#### Create your own typology to add custom types
 
 ```js
-var types = require('typology');
+var Typology = require('typology');
 
-types.add(myCustomType);
+var myTypology = new Typology();
+
+// Then add custom definitions
+myTypology.add(myCustomType);
 
 // Example
-types.add('User', {
+myTypology.add('User', {
   firstname: 'string',
   lastname: 'string',
   age: '?number'
 });
 
 // Then you can use it likewise
-types.check({hello: 'world'}, 'User');
+myTypology.check({hello: 'world'}, 'User');
 >>> false
 
 // And use it in other types' definition
-types.check(myVar, 'User|number');
+myTypology.check(myVar, 'User|number');
 ```
 
 #### Checking whether a custom type's definition is valid
