@@ -3,3 +3,4 @@
 .npmignore
 node_modules
 test
+*.tgz
