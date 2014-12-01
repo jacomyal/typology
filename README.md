@@ -1,6 +1,6 @@
 # Typology
 
-Typology is a lightweight type checking library for Node.js and the browser (with or without [Browserify](http://browserify.org/)).
+Typology is a lightweight data validation library for Node.js and the browser (with or without [Browserify](http://browserify.org/)).
 
 It can validate variables against native JavaScript types as well as against custom types you can define.
 

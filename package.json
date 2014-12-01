@@ -1,7 +1,7 @@
 {
   "name": "typology",
   "version": "0.1.1",
-  "description": "A type checking library for Node.js and the browser.",
+  "description": "A data validation library for Node.js and the browser.",
   "main": "typology.js",
   "scripts": {
     "test": "gulp lint test"
@@ -11,8 +11,8 @@
     "url": "git@github.com:jacomyal/typology.git"
   },
   "keywords": [
-    "validation",
-    "types"
+    "data",
+    "validation"
   ],
   "authors": [
     "Yomguithereal",
