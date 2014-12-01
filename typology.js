@@ -284,7 +284,7 @@
 
   // Version
   Object.defineProperty(types, 'version', {
-    value: '0.1.1'
+    value: '0.2.0'
   });
 
   /**
