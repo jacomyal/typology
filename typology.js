@@ -1,5 +1,5 @@
 /**
- * typology.js - a type checking library for Node.js and the browser,
+ * typology.js - A data validation library for Node.js and the browser,
  *
  * Version: 0.1.1
  * Sources: http://github.com/jacomyal/typology
