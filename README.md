@@ -196,7 +196,7 @@ types.isValid('randomcrap');
 
 Contributions are welcome. Please be sure to add and pass unit tests if relevant before submitting any code.
 
-To setup the project, just install npm dependencies with `npm install` and run tests with `npm tests`.
+To setup the project, just install npm dependencies with `npm install` and run tests with `npm test`.
 
 ## License
 
