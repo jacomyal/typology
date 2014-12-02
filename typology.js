@@ -94,7 +94,7 @@
         type = a2;
       } else
         throw new Error('types.add has to be called ' +
-                        'with one or three arguments.');
+                        'with one or two arguments.');
 
       if (this.get(id) !== 'string' || id.length === 0)
         throw new Error('A type requires an string id.');
