@@ -185,7 +185,7 @@
           if (customTypes[a[i]])
             if (
               (typeof customTypes[a[i]].type === 'function') ?
-              (customTypes[a[i]].type(obj) === true) :
+              (customTypes[a[i]].type.call(this, obj) === true) :
               this.check(obj, customTypes[a[i]].type)
             )
               return !exclusive;

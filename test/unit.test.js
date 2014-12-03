@@ -238,6 +238,15 @@ describe('Typology', function() {
     assert.strictEqual(types.check(42, 'non-primitive'), false);
     assert.strictEqual(types.check('hello', 'non-primitive'), false);
 
+    // Check scope
+    types.add('integerString', function(v) {
+      return this.check(v, 'string') && this.check(+v, 'integer');
+    });
+    assert.strictEqual(types.check('123', 'integerString'), true);
+    assert.strictEqual(types.check(123, 'integerString'), false);
+    assert.strictEqual(types.check('123.456', 'integerString'), false);
+    assert.strictEqual(types.check('abc', 'integerString'), false);
+
     // Returns this
     assert.strictEqual(types.add('f1', '?string'), types, 'returns types object aka this');
   });
