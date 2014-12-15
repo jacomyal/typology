@@ -291,8 +291,12 @@
     };
 
     // Validate the given data against the given type
-    this.check = function(obj, type) {
-      return !_scan(obj, type);
+    this.check = function(obj, type, throws) {
+      var result = _scan(obj, type);
+      if (throws && result)
+        throw result;
+      else
+        return !result;
     };
 
     // Is the given type valid?
