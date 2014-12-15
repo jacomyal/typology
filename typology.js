@@ -58,7 +58,153 @@
    */
   function Typology(defs) {
     // Privates
-    var _customTypes = {};
+    var _self = this,
+        _customTypes = {};
+
+    // Validate the given data against the given type, but returns a more
+    // specific object
+    function _scan(obj, type) {
+      var a,
+          i,
+          k,
+          error,
+          subError,
+          hasStar,
+          hasTypeOf,
+          optional = false,
+          exclusive = false,
+          typeOf = _self.get(obj);
+
+      if (_self.get(type) === 'string') {
+        a = type.replace(/^[\?\!]/, '').split(/\|/);
+        for (i in a)
+          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
+            throw new Error('Invalid type.');
+
+        if (type.match(/^\?/))
+          optional = true;
+
+        if (type.replace(/^\?/, '').match(/^\!/))
+          exclusive = true;
+
+        if (exclusive && optional)
+          throw new Error('Invalid type.');
+
+        for (i in a)
+          if (_customTypes[a[i]])
+            if (
+              (typeof _customTypes[a[i]].type === 'function') ?
+                (_customTypes[a[i]].type.call(_self, obj) === true) :
+                !_scan(obj, _customTypes[a[i]].type)
+            ) {
+              if (exclusive) {
+                error = {
+                  message: 'The type "' + a[i] + '" is not allowed',
+                  matched: a[i],
+                  type: type,
+                  value: obj
+                };
+                return error;
+              } else
+                return null;
+            }
+
+        if (obj === null || obj === undefined) {
+          if (!exclusive && !optional) {
+            error = {
+              message: 'The type "' + obj + '" is not allowed.',
+              type: type,
+              value: obj
+            };
+            return error;
+          } else
+            return null;
+
+        } else {
+          hasStar = ~a.indexOf('*');
+          hasTypeOf = ~a.indexOf(typeOf);
+          if (exclusive && (hasStar || hasTypeOf)) {
+            error = {
+              message:
+                'The type "' + (hasTypeOf ? typeOf : '*') + '" is not allowed.',
+              matched: hasTypeOf ? typeOf : '*',
+              type: type,
+              value: obj
+            };
+            return error;
+          } else if (!exclusive && !(hasStar || hasTypeOf)) {
+            error = {
+              message: 'The type "' + typeOf + '" is not allowed.',
+              type: type,
+              value: obj
+            };
+            return error;
+          } else
+            return null;
+        }
+
+      } else if (_self.get(type) === 'object') {
+        if (typeOf !== 'object') {
+          error = {
+            message: 'An object is expected.',
+            type: type,
+            value: obj
+          };
+          return error;
+        }
+
+        for (k in type)
+          if ((subError = _scan(obj[k], type[k]))) {
+            error = {
+              message: 'A sub-object does not match the required type.',
+              subError: subError,
+              type: type,
+              value: obj
+            };
+            return error;
+          }
+
+        for (k in obj)
+          if (type[k] === undefined) {
+            error = {
+              message: 'The key "' + k + '" is not expected.',
+              type: type,
+              value: obj
+            };
+            return error;
+          }
+
+        return null;
+
+      } else if (_self.get(type) === 'array') {
+        if (type.length !== 1)
+          throw new Error('Invalid type.');
+
+        if (typeOf !== 'array') {
+          error = {
+            message: 'An array is expected.',
+            type: type,
+            value: obj
+          };
+          return error;
+        }
+
+        for (k in obj)
+          if ((subError = _scan(obj[k], type[0]))) {
+            error = {
+              message: 'The ' + k + '-th element of the array does not match ' +
+                       'the required type.',
+              subError: subError,
+              type: type,
+              value: obj
+            };
+            return error;
+          }
+
+        return null;
+      } else
+        throw new Error('Invalid type.');
+    }
 
     /**
      * Methods
@@ -154,152 +300,7 @@
 
     // Validate the given data against the given type
     this.check = function(obj, type) {
-      return !this.validate(obj, type);
-    };
-
-    // Validate the given data against the given type, but returns a more
-    // specific object
-    this.validate = function(obj, type) {
-      var a,
-          i,
-          k,
-          error,
-          subError,
-          hasStar,
-          hasTypeOf,
-          optional = false,
-          exclusive = false,
-          typeOf = this.get(obj);
-
-      if (this.get(type) === 'string') {
-        a = type.replace(/^[\?\!]/, '').split(/\|/);
-        for (i in a)
-          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
-            throw new Error('Invalid type.');
-
-        if (type.match(/^\?/))
-          optional = true;
-
-        if (type.replace(/^\?/, '').match(/^\!/))
-          exclusive = true;
-
-        if (exclusive && optional)
-          throw new Error('Invalid type.');
-
-        for (i in a)
-          if (_customTypes[a[i]])
-            if (
-              (typeof _customTypes[a[i]].type === 'function') ?
-                (_customTypes[a[i]].type.call(this, obj) === true) :
-                !this.validate(obj, _customTypes[a[i]].type)
-            ) {
-              if (exclusive) {
-                error = {
-                  message: 'The type "' + a[i] + '" is not allowed',
-                  matched: a[i],
-                  type: type,
-                  value: obj
-                };
-                return error;
-              } else
-                return null;
-            }
-
-        if (obj === null || obj === undefined) {
-          if (!exclusive && !optional) {
-            error = {
-              message: 'The type "' + obj + '" is not allowed.',
-              type: type,
-              value: obj
-            };
-            return error;
-          } else
-            return null;
-
-        } else {
-          hasStar = ~a.indexOf('*');
-          hasTypeOf = ~a.indexOf(typeOf);
-          if (exclusive && (hasStar || hasTypeOf)) {
-            error = {
-              message:
-                'The type "' + (hasTypeOf ? typeOf : '*') + '" is not allowed.',
-              matched: hasTypeOf ? typeOf : '*',
-              type: type,
-              value: obj
-            };
-            return error;
-          } else if (!exclusive && !(hasStar || hasTypeOf)) {
-            error = {
-              message: 'The type "' + typeOf + '" is not allowed.',
-              type: type,
-              value: obj
-            };
-            return error;
-          } else
-            return null;
-        }
-
-      } else if (this.get(type) === 'object') {
-        if (typeOf !== 'object') {
-          error = {
-            message: 'An object is expected.',
-            type: type,
-            value: obj
-          };
-          return error;
-        }
-
-        for (k in type)
-          if ((subError = this.validate(obj[k], type[k]))) {
-            error = {
-              message: 'A sub-object does not match the required type.',
-              subError: subError,
-              type: type,
-              value: obj
-            };
-            return error;
-          }
-
-        for (k in obj)
-          if (type[k] === undefined) {
-            error = {
-              message: 'The key "' + k + '" is not expected.',
-              type: type,
-              value: obj
-            };
-            return error;
-          }
-
-        return null;
-
-      } else if (this.get(type) === 'array') {
-        if (type.length !== 1)
-          throw new Error('Invalid type.');
-
-        if (typeOf !== 'array') {
-          error = {
-            message: 'An array is expected.',
-            type: type,
-            value: obj
-          };
-          return error;
-        }
-
-        for (k in obj)
-          if ((subError = this.validate(obj[k], type[0]))) {
-            error = {
-              message: 'The ' + k + '-th element of the array does not match ' +
-                       'the required type.',
-              subError: subError,
-              type: type,
-              value: obj
-            };
-            return error;
-          }
-
-        return null;
-      } else
-        throw new Error('Invalid type.');
+      return !_scan(obj, type);
     };
 
     // Is the given type valid?
