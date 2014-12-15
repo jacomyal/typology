@@ -153,12 +153,10 @@
 
         for (k in type)
           if ((subError = _scan(obj[k], type[k]))) {
-            error = new Error();
-            error.message = 'A sub-object does not match the required type.';
-            error.subError = subError;
-            error.key = k;
-            error.type = type;
-            error.value = obj;
+            error = subError;
+            error.path = error.path ?
+              [i].concat(error.path) :
+              [i];
             return error;
           }
 
@@ -188,13 +186,10 @@
         l = obj.length;
         for (i = 0; i < l; i++)
           if ((subError = _scan(obj[i], type[0]))) {
-            error = new Error();
-            error.message = 'The ' + i + '-th element of the array does not ' +
-                            'match the required type.';
-            error.subError = subError;
-            error.key = i;
-            error.type = type;
-            error.value = obj;
+            error = subError;
+            error.path = error.path ?
+              [i].concat(error.path) :
+              [i];
             return error;
           }
 
