@@ -66,6 +66,7 @@
     function _scan(obj, type) {
       var a,
           i,
+          l,
           k,
           error,
           subError,
@@ -77,7 +78,8 @@
 
       if (_self.get(type) === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
-        for (i in a)
+        l = a.length;
+        for (i = 0; i < l; i++)
           if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
             throw new Error('Invalid type.');
 
@@ -98,12 +100,11 @@
                 !_scan(obj, _customTypes[a[i]].type)
             ) {
               if (exclusive) {
-                error = {
-                  message: 'The type "' + a[i] + '" is not allowed',
-                  matched: a[i],
-                  type: type,
-                  value: obj
-                };
+                error = new Error();
+                error.message = 'The type "' + a[i] + '" is not allowed';
+                error.matched = a[i];
+                error.type = type;
+                error.value = obj;
                 return error;
               } else
                 return null;
@@ -111,11 +112,10 @@
 
         if (obj === null || obj === undefined) {
           if (!exclusive && !optional) {
-            error = {
-              message: 'The type "' + obj + '" is not allowed.',
-              type: type,
-              value: obj
-            };
+            error = new Error();
+            error.message = 'The type "' + obj + '" is not allowed.';
+            error.type = type;
+            error.value = obj;
             return error;
           } else
             return null;
@@ -124,20 +124,19 @@
           hasStar = ~a.indexOf('*');
           hasTypeOf = ~a.indexOf(typeOf);
           if (exclusive && (hasStar || hasTypeOf)) {
-            error = {
-              message:
-                'The type "' + (hasTypeOf ? typeOf : '*') + '" is not allowed.',
-              matched: hasTypeOf ? typeOf : '*',
-              type: type,
-              value: obj
-            };
+            error = new Error();
+            error.message = 'The type "' + (hasTypeOf ? typeOf : '*') + '" ' +
+                            'is not allowed.';
+            error.matched = hasTypeOf ? typeOf : '*';
+            error.type = type;
+            error.value = obj;
             return error;
+
           } else if (!exclusive && !(hasStar || hasTypeOf)) {
-            error = {
-              message: 'The type "' + typeOf + '" is not allowed.',
-              type: type,
-              value: obj
-            };
+            error = new Error();
+            error.message = 'The type "' + typeOf + '" is not allowed.';
+            error.type = type;
+            error.value = obj;
             return error;
           } else
             return null;
@@ -145,32 +144,30 @@
 
       } else if (_self.get(type) === 'object') {
         if (typeOf !== 'object') {
-          error = {
-            message: 'An object is expected.',
-            type: type,
-            value: obj
-          };
+          error = new Error();
+          error.message = 'An object is expected.';
+          error.type = type;
+          error.value = obj;
           return error;
         }
 
         for (k in type)
           if ((subError = _scan(obj[k], type[k]))) {
-            error = {
-              message: 'A sub-object does not match the required type.',
-              subError: subError,
-              type: type,
-              value: obj
-            };
+            error = new Error();
+            error.message = 'A sub-object does not match the required type.';
+            error.subError = subError;
+            error.key = k;
+            error.type = type;
+            error.value = obj;
             return error;
           }
 
         for (k in obj)
           if (type[k] === undefined) {
-            error = {
-              message: 'The key "' + k + '" is not expected.',
-              type: type,
-              value: obj
-            };
+            error = new Error();
+            error.message = 'The key "' + k + '" is not expected.';
+            error.type = type;
+            error.value = obj;
             return error;
           }
 
@@ -181,23 +178,23 @@
           throw new Error('Invalid type.');
 
         if (typeOf !== 'array') {
-          error = {
-            message: 'An array is expected.',
-            type: type,
-            value: obj
-          };
+          error = new Error();
+          error.message = 'An array is expected.';
+          error.type = type;
+          error.value = obj;
           return error;
         }
 
-        for (k in obj)
-          if ((subError = _scan(obj[k], type[0]))) {
-            error = {
-              message: 'The ' + k + '-th element of the array does not match ' +
-                       'the required type.',
-              subError: subError,
-              type: type,
-              value: obj
-            };
+        l = obj.length;
+        for (i = 0; i < l; i++)
+          if ((subError = _scan(obj[i], type[0]))) {
+            error = new Error();
+            error.message = 'The ' + i + '-th element of the array does not ' +
+                            'match the required type.';
+            error.subError = subError;
+            error.key = i;
+            error.type = type;
+            error.value = obj;
             return error;
           }
 
