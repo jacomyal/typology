@@ -57,10 +57,8 @@
    * Main object
    */
   function Typology(defs) {
-    defs = defs || {};
-
     // Privates
-    var customTypes = {};
+    var _customTypes = {};
 
     /**
      * Methods
@@ -99,21 +97,21 @@
       if (this.get(id) !== 'string' || id.length === 0)
         throw new Error('A type requires an string id.');
 
-      if (customTypes[id] !== undefined && customTypes[id] !== 'proto')
+      if (_customTypes[id] !== undefined && _customTypes[id] !== 'proto')
         throw new Error('The type "' + id + '" already exists.');
 
       if (~nativeTypes.indexOf(id))
         throw new Error('"' + id + '" is a reserved type name.');
 
-      customTypes[id] = 1;
+      _customTypes[id] = 1;
 
       // Check given prototypes:
       a = (o || {}).proto || [];
       a = Array.isArray(a) ? a : [a];
       tmp = {};
       for (k in a)
-        if (customTypes[a[k]] === undefined) {
-          customTypes[a[k]] = 1;
+        if (_customTypes[a[k]] === undefined) {
+          _customTypes[a[k]] = 1;
           tmp[a[k]] = 1;
         }
 
@@ -123,7 +121,7 @@
                         'a function testing given objects.');
 
       // Effectively add the type:
-      customTypes[id] = (o === undefined) ?
+      _customTypes[id] = (o === undefined) ?
         {
           id: id,
           type: type
@@ -132,19 +130,19 @@
 
       if (o !== undefined)
         for (k in o)
-          customTypes[id][k] = o[k];
+          _customTypes[id][k] = o[k];
 
       // Delete prototypes:
       for (k in tmp)
         if (k !== id)
-          delete customTypes[k];
+          delete _customTypes[k];
 
       return this;
     };
 
     // Check whether this typology has the given type
     this.has = function(key) {
-      return !!customTypes[key];
+      return !!_customTypes[key];
     };
 
     // Get the native type of the given variable
@@ -176,7 +174,7 @@
       if (this.get(type) === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         for (i in a)
-          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes))
+          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
             throw new Error('Invalid type.');
 
         if (type.match(/^\?/))
@@ -189,11 +187,11 @@
           throw new Error('Invalid type.');
 
         for (i in a)
-          if (customTypes[a[i]])
+          if (_customTypes[a[i]])
             if (
-              (typeof customTypes[a[i]].type === 'function') ?
-                (customTypes[a[i]].type.call(this, obj) === true) :
-                !this.validate(obj, customTypes[a[i]].type)
+              (typeof _customTypes[a[i]].type === 'function') ?
+                (_customTypes[a[i]].type.call(this, obj) === true) :
+                !this.validate(obj, _customTypes[a[i]].type)
             ) {
               if (exclusive) {
                 error = {
@@ -313,7 +311,7 @@
       if (this.get(type) === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         for (i in a)
-          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes))
+          if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
             return false;
         return true;
 
@@ -346,6 +344,7 @@
     });
 
     // Adding custom types at instantiation
+    defs = defs || {};
     if (this.get(defs) !== 'object')
       throw Error('Invalid argument.');
 
