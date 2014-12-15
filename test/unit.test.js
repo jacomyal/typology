@@ -51,6 +51,8 @@ describe('Typology', function() {
     assert.deepEqual(types.isValid([]), false, '[] invalidity succeeds');
     assert.deepEqual(types.isValid(['string', 'number']), false, '["string", "number"] invalidity succeeds');
     assert.deepEqual(types.isValid('!string'), true, '"!string" validity succeeds');
+    assert.deepEqual(types.isValid('!?string'), false, '"!?string" validity succeeds');
+    assert.deepEqual(types.isValid('?!string'), false, '"?!string" validity succeeds');
     assert.deepEqual(types.isValid('!string|object'), true, '"!string|object" validity succeeds.');
     assert.deepEqual(types.check('boolean', 'type'), true, 'types.check(val, "type") works with valid types.');
     assert.deepEqual(types.check('null', 'type'), false, 'types.check(val, "type") works with unvalid types.');

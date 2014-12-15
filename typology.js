@@ -164,7 +164,7 @@
           typeOf = this.get(obj);
 
       if (this.get(type) === 'string') {
-        a = type.replace(/^[?!]/, '').split(/\|/);
+        a = type.replace(/^[\?\!]/, '').split(/\|/);
         for (i in a)
           if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes)) {
             throw new Error('Invalid type.');
@@ -176,10 +176,13 @@
           type = type.replace(/^\?/, '');
         }
 
-        if (type.match(/^!/)) {
+        if (type.match(/^\!/)) {
           exclusive = true;
           type = type.replace(/^!/, '');
         }
+
+        if (exclusive && optional)
+          throw new Error('Invalid type.');
 
         for (i in a)
           if (customTypes[a[i]])
@@ -232,7 +235,7 @@
           i;
 
       if (this.get(type) === 'string') {
-        a = type.replace(/^[?!]/, '').split(/\|/);
+        a = type.replace(/^[\?\!]/, '').split(/\|/);
         for (i in a)
           if (nativeTypes.indexOf(a[i]) < 0 && !(a[i] in customTypes))
             return false;
