@@ -59,76 +59,77 @@ describe('Typology', function() {
   });
 
   it('types.check', function() {
-    assert.deepEqual(types.check(true, 'boolean'), true, 'true" matches "boolean"');
-    assert.deepEqual(types.check(true, 'boolean'), true, 'true" matches "boolean"');
-    assert.deepEqual(types.check(42, 'number'), true, '42" matches "number"');
-    assert.deepEqual(types.check('abc', 'string'), true, '"abc" matches "string"');
-    assert.deepEqual(types.check(function() {}, 'function'), true, 'function() {}" matches "function"');
-    assert.deepEqual(types.check([1, 2, 3], 'array'), true, '[1, 2, 3]" matches "array"');
-    assert.deepEqual(types.check(new Date(), 'date'), true, 'new Date()" matches "date"');
-    assert.deepEqual(types.check(/rhqq2/, 'regexp'), true, '/rhqq2/" matches "regexp"');
-    assert.deepEqual(types.check({a: 1, b: 2}, 'object'), true, '{a: 1, b: 2}" matches "object"');
-    assert.deepEqual(types.check('42', '*'), true, '"42" matches "*"');
-    assert.deepEqual(types.check('abc', '?string'), true, '"abc" matches "?string"');
-    assert.deepEqual(types.check(null, '?string'), true, 'null matches "?string"');
-    assert.deepEqual(types.check(undefined, '?string'), true, 'undefined matches "?string"');
-    assert.deepEqual(types.check('abc', 'string|array'), true, '"abc" matches "string|array"');
-    assert.deepEqual(types.check([1, 2, 3], 'string|array'), true, '[1, 2, 3] matches "string|array"');
-    assert.deepEqual(types.check('abc', '?string|array'), true, '"abc" matches "?string|array"');
-    assert.deepEqual(types.check([1, 2, 3], '?string|array'), true, '[1, 2, 3] matches "?string|array"');
-    assert.deepEqual(types.check(null, '?string|array'), true, 'null matches "?string|array"');
-    assert.deepEqual(types.check({b: 'def'}, {a: '?string|array', b: '?*'}), true, '{b: "def"} matches {a: "?string|array", b: "?*"}');
-    assert.deepEqual(types.check({a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: 'object'}), true, '{a: "abc", b: {a: 1, b: 2}} matches {a: "string", b: "object"}');
-    assert.deepEqual(types.check({a: 'abc', b: {a: 'def'}}, {a: 'string', b: {a: 'string'}}), true, '{a: "abc", b: {a: "def"}} matches {a: "string", b: {a: "string"}}');
-    assert.deepEqual(types.check({a: null, b: 'def'}, {a: '?string|array', b: '?*'}), true, '{a: null, b: "def"} matches {a: "?string|array", b: "?*"}');
-    assert.deepEqual(types.check({a: 'abc', b: 'def'}, {a: '?string|array', b: '?*'}), true, '{a: "abc", b: "def"} matches {a: "?string|array", b: "?*"}');
-    assert.deepEqual(types.check({a: [1, 2, 3], b: 'def'}, {a: '?string|array', b: '?*'}), true, '{a: [1, 2, 3], b: "def"} matches {a: "?string|array", b: "?*"}');
-    assert.deepEqual(types.check([], ['boolean']), true, '[] matches ["boolean"]');
-    assert.deepEqual(types.check([true], ['boolean']), true, '[true] matches ["boolean"]');
-    assert.deepEqual(types.check([true, false, true], ['boolean']), true, '[true, false, true] matches ["boolean"]');
-    assert.deepEqual(types.check([{}, {a: false}], [{a: '?boolean'}]), true, '[{}, {a: false}] matches [{a: "?boolean"}]');
-    assert.deepEqual(types.check(42, 'boolean'), false, '42 does not match "boolean"');
-    assert.deepEqual(types.check('abc', 'number'), false, '"abc" does not match "number"');
-    assert.deepEqual(types.check(function() {}, 'string'), false, 'function() {} does not match "string"');
-    assert.deepEqual(types.check([1, 2, 3], 'function'), false, '[1, 2, 3] does not match "function"');
-    assert.deepEqual(types.check(new Date(), 'array'), false, 'new Date() does not match "array"');
-    assert.deepEqual(types.check(/rhqq2/, 'date'), false, '/rhqq2/ does not match "date"');
-    assert.deepEqual(types.check({a: 1, b: 2}, 'regexp'), false, '{a: 1, b: 2} does not match "regexp"');
-    assert.deepEqual(types.check(true, 'object'), false, 'true does not match "object"');
-    assert.deepEqual(types.check(null, '*'), false, 'null does not match "*"');
-    assert.deepEqual(types.check(null, 'string|array'), false, 'null does not match "string|array"');
-    assert.deepEqual(types.check(42, '?string'), false, '42 does not match "?string"');
-    assert.deepEqual(types.check(null, ['boolean']), false, 'null does not match ["boolean"]');
-    assert.deepEqual(types.check([false, 1], ['boolean']), false, '[false, 1] does not match ["boolean"]');
-    assert.deepEqual(types.check({a: 'abc', b: '12'}, {a: 'string'}), false, '{a: "abc", b: "12"} does not match {a: "string"}');
-    assert.deepEqual(types.check({a: 'abc', b: 42}, {a: 'string', b: 'object'}), false, '{a: "abc", b: 42} does not match {a: "string", b: "object"}');
-    assert.deepEqual(types.check({b: {a: 1, b: 2}}, {a: 'string', b: 'object'}), false, '{b: {a: 1, b: 2}} does not match {a: "string", b: "object"}');
-    assert.deepEqual(types.check({a: 'abc'}, {a: 'string', b: 'object'}), false, '{a: "abc"} does not match {a: "string", b: "object"}');
-    assert.deepEqual(types.check({a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: {a: 'string'}}), false, '{a: "abc", b: {a: 1, b: 2}} does not match {a: "string", b: {a: "string"}}');
-    assert.deepEqual(types.check({a: 'abc', b: 'def'}, {a: 'string', b: {a: 'string'}}), false, '{a: "abc", b: "def"} does not match {a: "string", b: {a: "string"}}');
-    assert.deepEqual(types.check(42, {a: '?string|array', b: '?*'}), false, '42 does not match {a: "?string|array", b: "?*"}');
-    assert.deepEqual(types.check('hello', '!object'), true, '"hello" does match "!object"');
-    assert.deepEqual(types.check('hello', '!object|string'), false, '"hello" does not match "!object|string"');
-    assert.deepEqual(types.check({hello: 'world'}, '!string'), true, '{hello: "world"} does match "!string"');
+    // Cases that match:
+    assert.deepEqual(types.check(true, 'boolean'), true);
+    assert.deepEqual(types.check(true, 'boolean'), true);
+    assert.deepEqual(types.check(42, 'number'), true);
+    assert.deepEqual(types.check('abc', 'string'), true);
+    assert.deepEqual(types.check(function() {}, 'function'), true);
+    assert.deepEqual(types.check([1, 2, 3], 'array'), true);
+    assert.deepEqual(types.check(new Date(), 'date'), true);
+    assert.deepEqual(types.check(/rhqq2/, 'regexp'), true);
+    assert.deepEqual(types.check({a: 1, b: 2}, 'object'), true);
+    assert.deepEqual(types.check('42', '*'), true);
+    assert.deepEqual(types.check('abc', '?string'), true);
+    assert.deepEqual(types.check(null, '?string'), true);
+    assert.deepEqual(types.check(undefined, '?string'), true);
+    assert.deepEqual(types.check('abc', 'string|array'), true);
+    assert.deepEqual(types.check([1, 2, 3], 'string|array'), true);
+    assert.deepEqual(types.check('abc', '?string|array'), true);
+    assert.deepEqual(types.check([1, 2, 3], '?string|array'), true);
+    assert.deepEqual(types.check(null, '?string|array'), true);
+    assert.deepEqual(types.check({b: 'def'}, {a: '?string|array', b: '?*'}), true);
+    assert.deepEqual(types.check({a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: 'object'}), true);
+    assert.deepEqual(types.check({a: 'abc', b: {a: 'def'}}, {a: 'string', b: {a: 'string'}}), true);
+    assert.deepEqual(types.check({a: null, b: 'def'}, {a: '?string|array', b: '?*'}), true);
+    assert.deepEqual(types.check({a: 'abc', b: 'def'}, {a: '?string|array', b: '?*'}), true);
+    assert.deepEqual(types.check({a: [1, 2, 3], b: 'def'}, {a: '?string|array', b: '?*'}), true);
+    assert.deepEqual(types.check([], ['boolean']), true);
+    assert.deepEqual(types.check([true], ['boolean']), true);
+    assert.deepEqual(types.check([true, false, true], ['boolean']), true);
+    assert.deepEqual(types.check([{}, {a: false}], [{a: '?boolean'}]), true);
+    assert.deepEqual(types.check({hello: 'world'}, '!string'), true);
+    assert.deepEqual(types.check('hello', '!object'), true);
+    assert.deepEqual(types.check(123, 'primitive'), true);
+    assert.deepEqual(types.check('abc', 'primitive'), true);
+    assert.deepEqual(types.check(undefined, 'primitive'), true);
+    assert.deepEqual(types.check(null, 'primitive'), true);
+    assert.deepEqual(types.check(true, 'primitive'), true);
 
+    // Cases that do not match:
+    assert.deepEqual(types.check(42, 'boolean'), false);
+    assert.deepEqual(types.check('abc', 'number'), false);
+    assert.deepEqual(types.check(function() {}, 'string'), false);
+    assert.deepEqual(types.check([1, 2, 3], 'function'), false);
+    assert.deepEqual(types.check(new Date(), 'array'), false);
+    assert.deepEqual(types.check(/rhqq2/, 'date'), false);
+    assert.deepEqual(types.check({a: 1, b: 2}, 'regexp'), false);
+    assert.deepEqual(types.check(true, 'object'), false);
+    assert.deepEqual(types.check(null, '*'), false);
+    assert.deepEqual(types.check(null, 'string|array'), false);
+    assert.deepEqual(types.check(42, '?string'), false);
+    assert.deepEqual(types.check(null, ['boolean']), false);
+    assert.deepEqual(types.check([false, 1], ['boolean']), false);
+    assert.deepEqual(types.check({a: 'abc', b: '12'}, {a: 'string'}), false);
+    assert.deepEqual(types.check({a: 'abc', b: 42}, {a: 'string', b: 'object'}), false);
+    assert.deepEqual(types.check({b: {a: 1, b: 2}}, {a: 'string', b: 'object'}), false);
+    assert.deepEqual(types.check({a: 'abc'}, {a: 'string', b: 'object'}), false);
+    assert.deepEqual(types.check({a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: {a: 'string'}}), false);
+    assert.deepEqual(types.check({a: 'abc', b: 'def'}, {a: 'string', b: {a: 'string'}}), false);
+    assert.deepEqual(types.check(42, {a: '?string|array', b: '?*'}), false);
+    assert.deepEqual(types.check('hello', '!object|string'), false);
+    assert.deepEqual(types.check(new Date(), 'primitive'), false);
+    assert.deepEqual(types.check({}, 'primitive'), false);
+    assert.deepEqual(types.check([], 'primitive'), false);
+    assert.deepEqual(types.check(Object.create(null), 'primitive'), false);
+
+    // Type errors:
     assert.throws(function() {
       types.check('abc', 'string|?array');
     }, Error);
-
     assert.throws(function() {
       types.check({a: 'abc', b: '12'}, {a: 'sstring'});
     }, Error);
-
-    // The special case of the "primitive" type:
-    assert.equal(types.check(123, 'primitive'), true);
-    assert.equal(types.check('abc', 'primitive'), true);
-    assert.equal(types.check(undefined, 'primitive'), true);
-    assert.equal(types.check(null, 'primitive'), true);
-    assert.equal(types.check(true, 'primitive'), true);
-    assert.equal(types.check(new Date(), 'primitive'), false);
-    assert.equal(types.check({}, 'primitive'), false);
-    assert.equal(types.check([], 'primitive'), false);
-    assert.equal(types.check(Object.create(null), 'primitive'), false);
   });
 
   it('types.add', function() {
