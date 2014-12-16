@@ -101,7 +101,7 @@
             ) {
               if (exclusive) {
                 error = new Error();
-                error.message = 'The type "' + a[i] + '" is not allowed';
+                error.message = 'The type "' + a[i] + '" is not allowed.';
                 error.matched = a[i];
                 error.type = type;
                 error.value = obj;
@@ -138,6 +138,7 @@
             error.type = type;
             error.value = obj;
             return error;
+
           } else
             return null;
         }
@@ -155,8 +156,8 @@
           if ((subError = _scan(obj[k], type[k]))) {
             error = subError;
             error.path = error.path ?
-              [i].concat(error.path) :
-              [i];
+              [k].concat(error.path) :
+              [k];
             return error;
           }
 

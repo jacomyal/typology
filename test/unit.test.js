@@ -1,9 +1,9 @@
 var assert = require('assert'),
     types = require('../typology.js'),
-    Typology = types;
+    Typology = types,
+    _ = require('lodash');
 
 describe('Typology', function() {
-
   it('types.get', function() {
     assert.deepEqual(types.get(true), 'boolean', 'Boolean succeeds');
     assert.deepEqual(types.get(42), 'number', 'Number succeeds');
@@ -58,69 +58,73 @@ describe('Typology', function() {
     assert.deepEqual(types.check('null', 'type'), false, 'types.check(val, "type") works with unvalid types.');
   });
 
+      // [ value, type ]
   var doMatch = [
-        [ true, 'boolean' ],
+/*  0 */[ true, 'boolean' ],
         [ 42, 'number' ],
         [ 'abc', 'string' ],
         [ function() {}, 'function' ],
         [ [1, 2, 3], 'array' ],
-        [ new Date(), 'date' ],
+/*  5 */[ new Date(), 'date' ],
         [ /rhqq2/, 'regexp' ],
         [ {a: 1, b: 2}, 'object' ],
         [ '42', '*' ],
         [ 'abc', '?string' ],
-        [ null, '?string' ],
+/* 10 */[ null, '?string' ],
         [ undefined, '?string' ],
         [ 'abc', 'string|array' ],
         [ [1, 2, 3], 'string|array' ],
         [ 'abc', '?string|array' ],
-        [ [1, 2, 3], '?string|array' ],
+/* 15 */[ [1, 2, 3], '?string|array' ],
         [ null, '?string|array' ],
         [ {b: 'def'}, {a: '?string|array', b: '?*'} ],
         [ {a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: 'object'} ],
         [ {a: 'abc', b: {a: 'def'}}, {a: 'string', b: {a: 'string'}} ],
-        [ {a: null, b: 'def'}, {a: '?string|array', b: '?*'} ],
+/* 20 */[ {a: null, b: 'def'}, {a: '?string|array', b: '?*'} ],
         [ {a: 'abc', b: 'def'}, {a: '?string|array', b: '?*'} ],
         [ {a: [1, 2, 3], b: 'def'}, {a: '?string|array', b: '?*'} ],
         [ [], ['boolean'] ],
         [ [true], ['boolean'] ],
-        [ [true, false, true], ['boolean'] ],
+/* 25 */[ [true, false, true], ['boolean'] ],
         [ [{}, {a: false}], [{a: '?boolean'}] ],
         [ {hello: 'world'}, '!string' ],
         [ 'hello', '!object' ],
         [ 123, 'primitive' ],
-        [ 'abc', 'primitive' ],
+/* 30 */[ 'abc', 'primitive' ],
         [ undefined, 'primitive' ],
         [ null, 'primitive' ],
         [ true, 'primitive' ]
       ],
+
+      // [ value, type, errorMessage?, path? ]
       dontMatch = [
-        [ 42, 'boolean' ],
-        [ 'abc', 'number' ],
-        [ function() {}, 'string' ],
-        [ [1, 2, 3], 'function' ],
-        [ new Date(), 'array' ],
-        [ /rhqq2/, 'date' ],
-        [ {a: 1, b: 2}, 'regexp' ],
-        [ true, 'object' ],
-        [ null, '*' ],
-        [ null, 'string|array' ],
-        [ 42, '?string' ],
-        [ null, ['boolean'] ],
-        [ [false, 1], ['boolean'] ],
-        [ {a: 'abc', b: '12'}, {a: 'string'} ],
-        [ {a: 'abc', b: 42}, {a: 'string', b: 'object'} ],
-        [ {b: {a: 1, b: 2}}, {a: 'string', b: 'object'} ],
-        [ {a: 'abc'}, {a: 'string', b: 'object'} ],
-        [ {a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: {a: 'string'}} ],
-        [ {a: 'abc', b: 'def'}, {a: 'string', b: {a: 'string'}} ],
-        [ 42, {a: '?string|array', b: '?*'} ],
-        [ 'hello', '!object|string' ],
-        [ new Date(), 'primitive' ],
-        [ {}, 'primitive' ],
-        [ [], 'primitive' ],
-        [ Object.create(null), 'primitive' ]
+/*  0 */[ 42, 'boolean', /The type "number" is not allowed/, undefined ],
+        [ 'abc', 'number', /The type "string" is not allowed/, undefined ],
+        [ function() {}, 'string', /The type "function" is not allowed/, undefined ],
+        [ [1, 2, 3], 'function', /The type "array" is not allowed/, undefined ],
+        [ new Date(), 'array', /The type "date" is not allowed/, undefined ],
+/*  5 */[ /rhqq2/, 'date', /The type "regexp" is not allowed/, undefined ],
+        [ {a: 1, b: 2}, 'regexp', /The type "object" is not allowed/, undefined ],
+        [ true, 'object', /The type "boolean" is not allowed/, undefined ],
+        [ null, '*', /The type "null" is not allowed/, undefined ],
+        [ null, ['boolean'], /An array is expected/, undefined ],
+/* 10 */[ null, 'string|array', /The type "null" is not allowed/, undefined ],
+        [ 42, '?string', /The type "number" is not allowed/, undefined ],
+        [ [false, 1], ['boolean'], /The type "number" is not allowed/, [1] ],
+        [ {a: 'abc', b: '12'}, {a: 'string'}, /The key "b" is not expected/ ],
+        [ {a: 'abc', b: 42}, {a: 'string', b: 'object'}, /The type "number" is not allowed/, ['b'] ],
+/* 15 */[ {b: {a: 1, b: 2}}, {a: 'string', b: 'object'}, /The type "undefined" is not allowed/, ['a'] ],
+        [ {a: 'abc'}, {a: 'string', b: 'object'}, /The type "undefined" is not allowed/, ['b'] ],
+        [ {a: 'abc', b: {a: 1, b: 2}}, {a: 'string', b: {a: 'string'}}, /The type "number" is not allowed/, ['b', 'a'] ],
+        [ {a: 'abc', b: 'def'}, {a: 'string', b: {a: 'string'}}, /An object is expected/, ['b'] ],
+        [ 42, {a: '?string|array', b: '?*'}, /An object is expected/, undefined ],
+/* 20 */[ 'hello', '!object|string', /The type "string" is not allowed/, undefined ],
+        [ new Date(), 'primitive', /The type "date" is not allowed/, undefined ],
+        [ {}, 'primitive', /The type "object" is not allowed/, undefined ],
+        [ [], 'primitive', /The type "array" is not allowed/, undefined ],
+        [ Object.create(null), 'primitive', /The type "object" is not allowed/, undefined ]
       ],
+
       typeError = [
         [ 'abc', 'string|?array' ],
         [ {a: 'abc', b: '12'}, {a: 'sstring'} ]
@@ -139,9 +143,12 @@ describe('Typology', function() {
 
     // Type errors:
     typeError.forEach(function(arr) {
-      assert.throws(function() {
-        types.check(arr[0], arr[1]);
-      }, 'Invalid type.');
+      assert.throws(
+        function() {
+          types.check(arr[0], arr[1]);
+        },
+        /Invalid type/
+      );
     });
   });
 
@@ -152,17 +159,36 @@ describe('Typology', function() {
     });
 
     // Cases that do not match:
-    dontMatch.forEach(function(arr) {
-      assert.throws(function() {
-        types.check(arr[0], arr[1], true);
-      });
+    dontMatch.forEach(function(arr, index) {
+      assert.throws(
+        function() {
+          types.check(arr[0], arr[1], true);
+        },
+        function(err) {
+          if (
+            (err instanceof Error) &&
+            (!arr[2] || arr[2].test(err.message)) &&
+            (!arr[3] || _.isEqual(err.path, arr[3]))
+          )
+            return true;
+          else {
+            console.log('Failing index:', index);
+            console.log(' - Message:', err.message, ' - expected:', arr[2]);
+            console.log(' - Path:', err.path, ' - expected:', arr[3]);
+            console.log(' - More info:', err);
+          }
+        }
+      );
     });
 
     // Type errors:
     typeError.forEach(function(arr) {
-      assert.throws(function() {
-        types.check(arr[0], arr[1], true);
-      }, 'Invalid type.');
+      assert.throws(
+        function() {
+          types.check(arr[0], arr[1]);
+        },
+        /Invalid type/
+      );
     });
   });
 
