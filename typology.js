@@ -101,10 +101,11 @@
             ) {
               if (exclusive) {
                 error = new Error();
-                error.message = 'The type "' + a[i] + '" is not allowed.';
-                error.matched = a[i];
-                error.type = type;
-                error.value = obj;
+                error.message = 'Expected a "' + type + '" but found a ' +
+                                '"' + a[i] + '".';
+              error.expected = type;
+              error.type = a[i];
+              error.value = obj;
                 return error;
               } else
                 return null;
@@ -113,8 +114,10 @@
         if (obj === null || obj === undefined) {
           if (!exclusive && !optional) {
             error = new Error();
-            error.message = 'The type "' + obj + '" is not allowed.';
-            error.type = type;
+            error.message = 'Expected a "' + type + '" but found a ' +
+                            '"' + typeOf + '".';
+            error.expected = type;
+            error.type = typeOf;
             error.value = obj;
             return error;
           } else
@@ -125,17 +128,19 @@
           hasTypeOf = ~a.indexOf(typeOf);
           if (exclusive && (hasStar || hasTypeOf)) {
             error = new Error();
-            error.message = 'The type "' + (hasTypeOf ? typeOf : '*') + '" ' +
-                            'is not allowed.';
-            error.matched = hasTypeOf ? typeOf : '*';
-            error.type = type;
+            error.message = 'Expected a "' + type + '" but found a ' +
+                            '"' + (hasTypeOf ? typeOf : '*') + '".';
+            error.type = hasTypeOf ? typeOf : '*';
+            error.expected = type;
             error.value = obj;
             return error;
 
           } else if (!exclusive && !(hasStar || hasTypeOf)) {
             error = new Error();
-            error.message = 'The type "' + typeOf + '" is not allowed.';
-            error.type = type;
+            error.message = 'Expected a "' + type + '" but found a ' +
+                            '"' + typeOf + '".';
+            error.expected = type;
+            error.type = typeOf;
             error.value = obj;
             return error;
 
@@ -146,8 +151,9 @@
       } else if (_self.get(type) === 'object') {
         if (typeOf !== 'object') {
           error = new Error();
-          error.message = 'An object is expected.';
-          error.type = type;
+          error.message = 'Expected an object but found a "' + typeOf + '".';
+          error.expected = type;
+          error.type = typeOf;
           error.value = obj;
           return error;
         }
@@ -164,8 +170,8 @@
         for (k in obj)
           if (type[k] === undefined) {
             error = new Error();
-            error.message = 'The key "' + k + '" is not expected.';
-            error.type = type;
+            error.message = 'Unexpected key "' + k + '".';
+            error.type = typeOf;
             error.value = obj;
             return error;
           }
@@ -178,8 +184,9 @@
 
         if (typeOf !== 'array') {
           error = new Error();
-          error.message = 'An array is expected.';
-          error.type = type;
+          error.message = 'Expected an array but found a "' + typeOf + '".';
+          error.expected = type;
+          error.type = typeOf;
           error.value = obj;
           return error;
         }
