@@ -5,57 +5,57 @@ var assert = require('assert'),
 
 describe('Typology', function() {
   it('types.get', function() {
-    assert.deepEqual(types.get(true), 'boolean', 'Boolean succeeds');
-    assert.deepEqual(types.get(42), 'number', 'Number succeeds');
-    assert.deepEqual(types.get('abc'), 'string', 'String succeeds');
-    assert.deepEqual(types.get(function() {}), 'function', 'Function succeeds');
-    assert.deepEqual(types.get([]), 'array', 'Array succeeds');
-    assert.deepEqual(types.get(new Date()), 'date', 'Date succeeds');
-    assert.deepEqual(types.get(/abd/), 'regexp', 'RegExp succeeds');
-    assert.deepEqual(types.get({a: 1, b: 2}), 'object', 'Object succeeds');
-    assert.deepEqual(types.get(null), 'null', 'Null succeeds');
-    assert.deepEqual(types.get(undefined), 'undefined', 'Undefined succeeds');
+    assert.deepEqual(types.get(true), 'boolean');
+    assert.deepEqual(types.get(42), 'number');
+    assert.deepEqual(types.get('abc'), 'string');
+    assert.deepEqual(types.get(function() {}), 'function');
+    assert.deepEqual(types.get([]), 'array');
+    assert.deepEqual(types.get(new Date()), 'date');
+    assert.deepEqual(types.get(/abd/), 'regexp');
+    assert.deepEqual(types.get({a: 1, b: 2}), 'object');
+    assert.deepEqual(types.get(null), 'null');
+    assert.deepEqual(types.get(undefined), 'undefined');
     (function() {
-      assert.deepEqual(types.get(arguments), 'arguments', 'Arguments succeeds');
+      assert.deepEqual(types.get(arguments), 'arguments');
     })();
   });
 
   it('types.isValid', function() {
-    assert.deepEqual(types.isValid('boolean'), true, '"boolean" validity succeeds');
-    assert.deepEqual(types.isValid('number'), true, '"number" validity succeeds');
-    assert.deepEqual(types.isValid('string'), true, '"string" validity succeeds');
-    assert.deepEqual(types.isValid('function'), true, '"function" validity succeeds');
-    assert.deepEqual(types.isValid('array'), true, '"array" validity succeeds');
-    assert.deepEqual(types.isValid('date'), true, '"date" validity succeeds');
-    assert.deepEqual(types.isValid('regexp'), true, '"regexp" validity succeeds');
-    assert.deepEqual(types.isValid('object'), true, '"object" validity succeeds');
-    assert.deepEqual(types.isValid('*'), true, '"*" validity succeeds');
-    assert.deepEqual(types.isValid('?string'), true, '"?string" validity succeeds');
-    assert.deepEqual(types.isValid('string|array'), true, '"string|array" validity succeeds');
-    assert.deepEqual(types.isValid('?string|array'), true, '"?string|array" validity succeeds');
-    assert.deepEqual(types.isValid('boolean'), true, '"boolean" validity succeeds');
-    assert.deepEqual(types.isValid('primitive'), true, '"primitive" validity succeeds');
-    assert.deepEqual(types.isValid({a: 'string', b: 'object'}), true, '{a: "string", b: "object"} validity succeeds');
-    assert.deepEqual(types.isValid({a: 'string', b: {a: 'string'}}), true, '{a: "string", b: {a: "string"}} validity succeeds');
-    assert.deepEqual(types.isValid({a: '?string|array', b: '?*'}), true, '{a: "?string|array", b: "?*"} validity succeeds');
-    assert.deepEqual(types.isValid({a: '?string|array', b: ['?*']}), true, '{a: "?string|array", b: ["?*"]} validity succeeds');
-    assert.deepEqual(types.isValid([{a: '?string|array', b: '?*'}]), true, '[{a: "?string|array", b: "?*"}] validity succeeds');
-    assert.deepEqual(types.isValid('null'), false, '"null" invalidity succeeds');
-    assert.deepEqual(types.isValid('undefined'), false, '"undefined" invalidity succeeds');
-    assert.deepEqual(types.isValid('string?'), false, '"string?" invalidity succeeds');
-    assert.deepEqual(types.isValid('string|'), false, '"string|" invalidity succeeds');
-    assert.deepEqual(types.isValid('|string'), false, '"|string" invalidity succeeds');
-    assert.deepEqual(types.isValid('sstring'), false, '"sstring" invalidity succeeds');
-    assert.deepEqual(types.isValid({a: 'sstring'}), false, '{a: "sstring"} invalidity succeeds');
-    assert.deepEqual(types.isValid('string|?array'), false, '"string|?array" invalidity succeeds');
-    assert.deepEqual(types.isValid([]), false, '[] invalidity succeeds');
-    assert.deepEqual(types.isValid(['string', 'number']), false, '["string", "number"] invalidity succeeds');
-    assert.deepEqual(types.isValid('!string'), true, '"!string" validity succeeds');
-    assert.deepEqual(types.isValid('!?string'), false, '"!?string" validity succeeds');
-    assert.deepEqual(types.isValid('?!string'), false, '"?!string" validity succeeds');
-    assert.deepEqual(types.isValid('!string|object'), true, '"!string|object" validity succeeds.');
-    assert.deepEqual(types.check('boolean', 'type'), true, 'types.check(val, "type") works with valid types.');
-    assert.deepEqual(types.check('null', 'type'), false, 'types.check(val, "type") works with unvalid types.');
+    assert.deepEqual(types.isValid('boolean'), true);
+    assert.deepEqual(types.isValid('number'), true);
+    assert.deepEqual(types.isValid('string'), true);
+    assert.deepEqual(types.isValid('function'), true);
+    assert.deepEqual(types.isValid('array'), true);
+    assert.deepEqual(types.isValid('date'), true);
+    assert.deepEqual(types.isValid('regexp'), true);
+    assert.deepEqual(types.isValid('object'), true);
+    assert.deepEqual(types.isValid('*'), true);
+    assert.deepEqual(types.isValid('?string'), true);
+    assert.deepEqual(types.isValid('string|array'), true);
+    assert.deepEqual(types.isValid('?string|array'), true);
+    assert.deepEqual(types.isValid('boolean'), true);
+    assert.deepEqual(types.isValid('primitive'), true);
+    assert.deepEqual(types.isValid({a: 'string', b: 'object'}), true);
+    assert.deepEqual(types.isValid({a: 'string', b: {a: 'string'}}), true);
+    assert.deepEqual(types.isValid({a: '?string|array', b: '?*'}), true);
+    assert.deepEqual(types.isValid({a: '?string|array', b: ['?*']}), true);
+    assert.deepEqual(types.isValid([{a: '?string|array', b: '?*'}]), true);
+    assert.deepEqual(types.isValid('null'), false);
+    assert.deepEqual(types.isValid('undefined'), false);
+    assert.deepEqual(types.isValid('string?'), false);
+    assert.deepEqual(types.isValid('string|'), false);
+    assert.deepEqual(types.isValid('|string'), false);
+    assert.deepEqual(types.isValid('sstring'), false);
+    assert.deepEqual(types.isValid({a: 'sstring'}), false);
+    assert.deepEqual(types.isValid('string|?array'), false);
+    assert.deepEqual(types.isValid([]), false);
+    assert.deepEqual(types.isValid(['string', 'number']), false);
+    assert.deepEqual(types.isValid('!string'), true);
+    assert.deepEqual(types.isValid('!?string'), false);
+    assert.deepEqual(types.isValid('?!string'), false);
+    assert.deepEqual(types.isValid('!string|object'), true);
+    assert.deepEqual(types.check('boolean', 'type'), true);
+    assert.deepEqual(types.check('null', 'type'), false);
   });
 
       // [ value, type ]
@@ -205,10 +205,10 @@ describe('Typology', function() {
       return (v === +v) && ((v % 1) === 0);
     });
 
-    assert.deepEqual(types.isValid('integer'), true, 'types.isValid("integer") is true');
-    assert.deepEqual(types.check(1, 'integer'), true, 'types.check(1, "integer") is true');
-    assert.deepEqual(types.check(1.2, 'integer'), false, 'types.check(1.2, "integer") is false');
-    assert.deepEqual(types.check({a: 1}, {a: 'integer'}), true, 'types.check({a: 1}, {a: "integer"}) is true');
+    assert.deepEqual(types.isValid('integer'), true);
+    assert.deepEqual(types.check(1, 'integer'), true);
+    assert.deepEqual(types.check(1.2, 'integer'), false);
+    assert.deepEqual(types.check({a: 1}, {a: 'integer'}), true);
 
     // Create an advanced type and use it:
     types.add('template', {
@@ -220,7 +220,7 @@ describe('Typology', function() {
       e: '?integer'
     });
 
-    assert.deepEqual(types.isValid('template'), true, 'types.isValid("template") is true');
+    assert.deepEqual(types.isValid('template'), true);
     assert.deepEqual(types.check({
       a: 42,
       b: 'toto',
@@ -228,7 +228,7 @@ describe('Typology', function() {
         d: '42'
       },
       e: 2
-    }, 'template'), true, 'types.check(value, "template") works');
+    }, 'template'), true);
     assert.deepEqual(types.check({
       a: 42,
       b: 'toto',
@@ -236,7 +236,7 @@ describe('Typology', function() {
         d: '42'
       },
       e: 2.4
-    }, 'template'), false, 'types.check(value, "template") works again');
+    }, 'template'), false);
 
     // Create a recursive type:
     types.add({
@@ -246,57 +246,35 @@ describe('Typology', function() {
       }
     });
 
-    assert.deepEqual(types.isValid('s'), true, 'types.isValid("s") is true (recursive)');
-    assert.deepEqual(types.check({}, 's'), true, 'recursive types work (level 0)');
-    assert.deepEqual(types.check({
-      k: {}
-    }, 's'), true, 'recursive types work (level 1)');
-    assert.deepEqual(types.check({
-      k: {
-        k: {}
-      }
-    }, 's'), true, 'recursive types work (level 2)');
-    assert.deepEqual(types.check({
-      k: {
-        k: {},
-        a: 42
-      }
-    }, 's'), false, 'recursive types still check wrong keys (level 2)');
+    assert.deepEqual(types.isValid('s'), true);
+    assert.deepEqual(types.check({}, 's'), true);
+    assert.deepEqual(types.check({ k: {} }, 's'), true);
+    assert.deepEqual(types.check({ k: { k: {} } }, 's'), true);
+    assert.deepEqual(types.check({ k: { k: {}, a: 42 } }, 's'), false);
 
     // Create two self referencing types:
     types.add({
       id: 's1',
       proto: ['s2'],
       type: {
-        k: '?s2'
+        s2: '?s2'
       }
     });
 
     types.add('s2', {
-      k: '?s1'
+      s1: '?s1'
     });
 
-    assert.deepEqual(types.isValid('s1'), true, 'types.isValid("s1") is true (recursive)');
-    assert.deepEqual(types.isValid('s2'), true, 'types.isValid("s2") is true');
-    assert.deepEqual(types.check({}, 's1'), true, 'double recursive types work (level 0)');
-    assert.deepEqual(types.check({
-      k: {}
-    }, 's1'), true, 'double recursive types work (level 1)');
-    assert.deepEqual(types.check({
-      k: {
-        k: {}
-      }
-    }, 's1'), true, 'double recursive types work (level 2)');
-    assert.deepEqual(types.check({
-      k: {
-        k: {},
-        a: 42
-      }
-    }, 's1'), false, 'double recursive types still check wrong keys (level 2)');
+    assert.deepEqual(types.isValid('s1'), true);
+    assert.deepEqual(types.isValid('s2'), true);
+    assert.deepEqual(types.check({}, 's1'), true);
+    assert.deepEqual(types.check({ s2: {} }, 's1'), true);
+    assert.deepEqual(types.check({ s2: { s1: {} } }, 's1'), true);
+    assert.deepEqual(types.check({ s2: { s1: {}, a: 42 } }, 's1'), false);
 
     types.add('non-primitive', '!primitive');
 
-    assert.strictEqual(types.isValid('non-primitive'), true, 'type.isValid("non-primitive") is true');
+    assert.strictEqual(types.isValid('non-primitive'), true);
     assert.strictEqual(types.check({hello: 'world'}, 'non-primitive'), true);
     assert.strictEqual(types.check(42, 'non-primitive'), false);
     assert.strictEqual(types.check('hello', 'non-primitive'), false);
@@ -311,7 +289,7 @@ describe('Typology', function() {
     assert.strictEqual(types.check('abc', 'integerString'), false);
 
     // Returns this
-    assert.strictEqual(types.add('f1', '?string'), types, 'returns types object aka this');
+    assert.strictEqual(types.add('f1', '?string'), types);
   });
 
   it('types.Typology', function() {
