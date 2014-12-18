@@ -1,7 +1,7 @@
 /**
  * typology.js - A data validation library for Node.js and the browser,
  *
- * Version: 0.3.0
+ * Version: 0.3.1
  * Sources: http://github.com/jacomyal/typology
  * Doc:     http://github.com/jacomyal/typology#readme
  *
@@ -577,7 +577,7 @@
 
   // Version:
   Object.defineProperty(types, 'version', {
-    value: '0.3.0'
+    value: '0.3.1'
   });
 
 
