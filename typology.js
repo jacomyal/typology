@@ -595,5 +595,5 @@
       return types;
     });
   else
-    this.types = types;
+    global.types = types;
 })(this);
