@@ -147,6 +147,9 @@
           i,
           l,
           k,
+          aKeys,
+          objKeys,
+          typeKeys,
           error,
           subError,
           hasStar,
@@ -171,19 +174,21 @@
         if (exclusive && optional)
           throw new Error('Invalid type.');
 
-        for (i in a)
-          if (_customTypes[a[i]])
+        aKeys = Object.keys(a);
+        l = aKeys.length;
+        for (i = 0; i < l; i++)
+          if (_customTypes[a[aKeys[i]]])
             if (
-              (typeof _customTypes[a[i]].type === 'function') ?
-                (_customTypes[a[i]].type.call(_self, obj) === true) :
-                !_scan(obj, _customTypes[a[i]].type)
+              (typeof _customTypes[a[aKeys[i]]].type === 'function') ?
+                (_customTypes[a[aKeys[i]]].type.call(_self, obj) === true) :
+                !_scan(obj, _customTypes[a[aKeys[i]]].type)
             ) {
               if (exclusive) {
                 error = new Error();
                 error.message = 'Expected a "' + type + '" but found a ' +
-                                '"' + a[i] + '".';
+                                '"' + a[aKeys[i]] + '".';
               error.expected = type;
-              error.type = a[i];
+              error.type = a[aKeys[i]];
               error.value = obj;
                 return error;
               } else
@@ -237,19 +242,23 @@
           return error;
         }
 
-        for (k in type)
-          if ((subError = _scan(obj[k], type[k]))) {
+        typeKeys = Object.keys(type);
+        l = typeKeys.length;
+        for (k = 0; k < l; k++)
+          if ((subError = _scan(obj[typeKeys[k]], type[typeKeys[k]]))) {
             error = subError;
             error.path = error.path ?
-              [k].concat(error.path) :
-              [k];
+              [typeKeys[k]].concat(error.path) :
+              [typeKeys[k]];
             return error;
           }
 
-        for (k in obj)
-          if (type[k] === undefined) {
+        objKeys = Object.keys(obj);
+        l = objKeys.length;
+        for (k = 0; k < l; k++)
+          if (type[objKeys[k]] === undefined) {
             error = new Error();
-            error.message = 'Unexpected key "' + k + '".';
+            error.message = 'Unexpected key "' + objKeys[k] + '".';
             error.type = typeOf;
             error.value = obj;
             return error;
