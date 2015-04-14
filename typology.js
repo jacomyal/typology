@@ -524,18 +524,28 @@
     this.isValid = function(type) {
       var a,
           k,
-          i;
+          i,
+          l,
+          aKeys,
+          typeKeys;
 
       if (this.get(type) === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
-        for (i in a)
-          if (__nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
+        aKeys = Object.keys(a);
+        l = aKeys.length;
+        for (i = 0; i < l; i++)
+          if (
+            __nativeTypes.indexOf(a[aKeys[i]]) < 0 &&
+            !(a[aKeys[i]] in _customTypes)
+          )
             return false;
         return true;
 
       } else if (this.get(type) === 'object') {
-        for (k in type)
-          if (!this.isValid(type[k]))
+        typeKeys = Object.keys(type);
+        l = typeKeys.length;
+        for (k = 0; k < l; k++)
+          if (!this.isValid(type[typeKeys[k]]))
             return false;
         return true;
 
