@@ -527,9 +527,15 @@
           i,
           l,
           aKeys,
-          typeKeys;
+          typeKeys,
+          typeOf = (type === null || type === undefined) ?
+                    String(type) :
+                    (
+                      __class2type[Object.prototype.toString.call(type)] ||
+                      'object'
+                    );
 
-      if (this.get(type) === 'string') {
+      if (typeOf === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         aKeys = Object.keys(a);
         l = aKeys.length;
@@ -541,7 +547,7 @@
             return false;
         return true;
 
-      } else if (this.get(type) === 'object') {
+      } else if (typeOf === 'object') {
         typeKeys = Object.keys(type);
         l = typeKeys.length;
         for (k = 0; k < l; k++)
@@ -549,7 +555,7 @@
             return false;
         return true;
 
-      } else if (this.get(type) === 'array')
+      } else if (typeOf === 'array')
         return type.length === 1 ?
           this.isValid(type[0]) :
           false;
