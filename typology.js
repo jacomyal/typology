@@ -156,9 +156,20 @@
           hasTypeOf,
           optional = false,
           exclusive = false,
-          typeOf = _self.get(obj);
+          typeOf = (obj === null || obj === undefined) ?
+                    String(obj) :
+                    (
+                      __class2type[Object.prototype.toString.call(obj)] ||
+                      'object'
+                    ),
+          requiredTypeOf = (type === null || type === undefined) ?
+                            String(type) :
+                            (
+                              __class2type[Object.prototype.toString.call(type)]
+                              || 'object'
+                            );
 
-      if (_self.get(type) === 'string') {
+      if (requiredTypeOf === 'string') {
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         l = a.length;
         for (i = 0; i < l; i++)
@@ -232,7 +243,7 @@
             return null;
         }
 
-      } else if (_self.get(type) === 'object') {
+      } else if (requiredTypeOf === 'object') {
         if (typeOf !== 'object') {
           error = new Error();
           error.message = 'Expected an object but found a "' + typeOf + '".';
@@ -266,7 +277,7 @@
 
         return null;
 
-      } else if (_self.get(type) === 'array') {
+      } else if (requiredTypeOf === 'array') {
         if (type.length !== 1)
           throw new Error('Invalid type.');
 
