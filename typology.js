@@ -61,15 +61,15 @@
     var k,
         className,
         classes = [
-          'Arguments',
           'Boolean',
           'Number',
           'String',
-          'Function',
+          'Object',
           'Array',
-          'Date',
+          'Function',
+          'Arguments',
           'RegExp',
-          'Object'
+          'Date'
         ];
 
     // Fill types
