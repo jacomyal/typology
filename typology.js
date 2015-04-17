@@ -165,8 +165,10 @@
           requiredTypeOf = (type === null || type === undefined) ?
                             String(type) :
                             (
-                              __class2type[Object.prototype.toString.call(type)]
-                              || 'object'
+                              __class2type[
+                                Object.prototype.toString.call(type)
+                              ] ||
+                              'object'
                             );
 
       if (requiredTypeOf === 'string') {
