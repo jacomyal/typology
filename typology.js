@@ -55,7 +55,7 @@
   /**
    * This array is the list of every types considered native by typology:
    */
-  var __nativeTypes = ['*'];
+  var __nativeTypes = { '*': true };
 
   (function() {
     var k,
@@ -75,7 +75,7 @@
     // Fill types
     for (k in classes) {
       className = classes[k];
-      __nativeTypes.push(className.toLowerCase());
+      __nativeTypes[className.toLowerCase()] = true;
       __class2type['[object ' + className + ']'] = className.toLowerCase();
     }
   })();
@@ -175,7 +175,7 @@
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         l = a.length;
         for (i = 0; i < l; i++)
-          if (__nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
+          if (!__nativeTypes[a[i]] && !(a[i] in _customTypes))
             throw new Error('Invalid type.');
 
         if (type.charAt(0) === '?')
@@ -397,7 +397,7 @@
       if (_customTypes[id] !== undefined && _customTypes[id] !== 'proto')
         throw new Error('The type "' + id + '" already exists.');
 
-      if (~__nativeTypes.indexOf(id))
+      if (__nativeTypes[id])
         throw new Error('"' + id + '" is a reserved type name.');
 
       _customTypes[id] = 1;
@@ -549,10 +549,7 @@
         aKeys = Object.keys(a);
         l = aKeys.length;
         for (i = 0; i < l; i++)
-          if (
-            __nativeTypes.indexOf(a[aKeys[i]]) < 0 &&
-            !(a[aKeys[i]] in _customTypes)
-          )
+          if (!__nativeTypes[a[aKeys[i]]] && !(a[aKeys[i]] in _customTypes))
             return false;
         return true;
 
