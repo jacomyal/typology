@@ -178,14 +178,10 @@
           if (__nativeTypes.indexOf(a[i]) < 0 && !(a[i] in _customTypes))
             throw new Error('Invalid type.');
 
-        if (type.match(/^\?/))
+        if (type.charAt(0) === '?')
           optional = true;
-
-        if (type.replace(/^\?/, '').match(/^\!/))
+        else if (type.charAt(0) === '!')
           exclusive = true;
-
-        if (exclusive && optional)
-          throw new Error('Invalid type.');
 
         aKeys = Object.keys(a);
         l = aKeys.length;
