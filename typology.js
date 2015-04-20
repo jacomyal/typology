@@ -549,7 +549,10 @@
         aKeys = Object.keys(a);
         l = aKeys.length;
         for (i = 0; i < l; i++)
-          if (!__nativeTypes[a[aKeys[i]]] && !(a[aKeys[i]] in _customTypes))
+          if (
+            !__nativeTypes[a[aKeys[i]]] &&
+            typeof _customTypes[a[aKeys[i]]] === 'undefined'
+          )
             return false;
         return true;
 
