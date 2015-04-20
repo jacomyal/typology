@@ -175,7 +175,7 @@
         a = type.replace(/^[\?\!]/, '').split(/\|/);
         l = a.length;
         for (i = 0; i < l; i++)
-          if (!__nativeTypes[a[i]] && !(a[i] in _customTypes))
+          if (!__nativeTypes[a[i]] && typeof _customTypes[a[i]] === 'undefined')
             throw new Error('Invalid type.');
 
         if (type.charAt(0) === '?')
@@ -186,7 +186,7 @@
         aKeys = Object.keys(a);
         l = aKeys.length;
         for (i = 0; i < l; i++)
-          if (_customTypes[a[aKeys[i]]])
+          if (typeof _customTypes[a[aKeys[i]]] !== 'undefined')
             if (
               (typeof _customTypes[a[aKeys[i]]].type === 'function') ?
                 (_customTypes[a[aKeys[i]]].type.call(_self, obj) === true) :
@@ -265,7 +265,7 @@
         objKeys = Object.keys(obj);
         l = objKeys.length;
         for (k = 0; k < l; k++)
-          if (type[objKeys[k]] === undefined) {
+          if (typeof type[objKeys[k]] === 'undefined') {
             error = new Error();
             error.message = 'Unexpected key "' + objKeys[k] + '".';
             error.type = typeOf;
