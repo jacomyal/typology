@@ -147,7 +147,6 @@
           i,
           l,
           k,
-          aKeys,
           objKeys,
           typeKeys,
           error,
@@ -183,22 +182,21 @@
         else if (type.charAt(0) === '!')
           exclusive = true;
 
-        aKeys = Object.keys(a);
-        l = aKeys.length;
+        l = a.length;
         for (i = 0; i < l; i++)
-          if (typeof _customTypes[a[aKeys[i]]] !== 'undefined')
+          if (typeof _customTypes[a[i]] !== 'undefined')
             if (
-              (typeof _customTypes[a[aKeys[i]]].type === 'function') ?
-                (_customTypes[a[aKeys[i]]].type.call(_self, obj) === true) :
-                !_scan(obj, _customTypes[a[aKeys[i]]].type)
+              (typeof _customTypes[a[i]].type === 'function') ?
+                (_customTypes[a[i]].type.call(_self, obj) === true) :
+                !_scan(obj, _customTypes[a[i]].type)
             ) {
               if (exclusive) {
                 error = new Error();
                 error.message = 'Expected a "' + type + '" but found a ' +
-                                '"' + a[aKeys[i]] + '".';
-              error.expected = type;
-              error.type = a[aKeys[i]];
-              error.value = obj;
+                                '"' + a[i] + '".';
+                error.expected = type;
+                error.type = a[i];
+                error.value = obj;
                 return error;
               } else
                 return null;
