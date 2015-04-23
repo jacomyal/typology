@@ -108,35 +108,65 @@
      * *********
      * 1. When the type matches:
      *  > _scan('abc', 'string');
-     *  will return null.
+     *  will return an object like the following :
+     *  {
+     *    expected: 'string',
+     *    type: 'string',
+     *    value: 'abc'
+     *  }
      *
      * 2. When a top-level type does not match:
      *  > _scan('abc', 'number');
-     *  will return an Error object with the following information:
-     *   - message: Expected a "number" but found a "string".
+     *  will return an object with like the following :
+     *  {
+     *    error: Expected a "number" but found a "string"
+     *    expected: 'number',
+     *    type: 'string',
+     *    value: 'abc'
+     *  }
      *
      * 3. When a sub-object type does not its type:
      *  > _scan({ a: 'abc' }, { a: 'number' });
-     *  will return an Error object with the following information:
-     *   - message: Expected a "number" but found a "string".
-     *   - path: [ 'a' ]
+     *  will return an object like the following :
+     *  {
+     *    error: Expected a "number" but found a "string"
+     *    expected: 'number',
+     *    type: 'string',
+     *    value: 'abc'
+     *    path: [ 'a' ]
+     *  }
      *
      * 4. When a deep sub-object type does not its type:
      *  > _scan({ a: [ 123, 'abc' ] }, { a: ['number'] });
-     *  will return an Error object with the following information:
-     *   - message: Expected a "number" but found a "string".
-     *   - path: [ 'a', 1 ]
+     *  will return an object like the following :
+     *  {
+     *    error: Expected a "number" but found a "string"
+     *    expected: 'number',
+     *    type: 'string',
+     *    value: 'abc'
+     *    path: [ 'a', 1 ]
+     *  }
      *
      * 5. When a required key is missing:
      *  > _scan({}, { a: 'number' });
-     *  will return an Error object with the following information:
-     *   - message: Expected a "number" but found a "undefined".
-     *   - path: [ 'a' ]
+     *  will return an object like the following :
+     *  {
+     *    error: Expected a "number" but found a "undefined"
+     *    expected: 'number',
+     *    type: 'undefined',
+     *    value: 'undefined',
+     *    path: [ 'a' ]
+     *  }
      *
      * 6. When an unexpected key is present:
      *  > _scan({ a: 123, b: 456 }, { a: 'number' });
-     *  will return an Error object with the following information:
-     *   - message: Unexpected key "b".
+     *  will return an object like the following :
+     *  {
+     *    error: Unexpected key "b"
+     *    expected: { a: 'number' },
+     *    type: 'object',
+     *    value: { a: 123, b: 456 }
+     *  }
      *
      * @param  {*}      obj  The value to validate.
      * @param  {type}   type The type.
