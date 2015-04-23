@@ -122,7 +122,8 @@ describe('Typology', function() {
         [ new Date(), 'primitive', /Expected a "primitive" but found a "date"/, undefined ],
         [ {}, 'primitive', /Expected a "primitive" but found a "object"/, undefined ],
         [ [], 'primitive', /Expected a "primitive" but found a "array"/, undefined ],
-        [ Object.create(null), 'primitive', /Expected a "primitive" but found a "object"/, undefined ]
+        [ Object.create(null), 'primitive', /Expected a "primitive" but found a "object"/, undefined ],
+/* 25 */[ {b: 555, c:'abs'}, {a: '?string', b:'number'}, /Unexpected key "c"/, undefined]
       ],
 
       typeError = [
