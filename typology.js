@@ -147,10 +147,10 @@
           i,
           l,
           k,
+          res,
+          nbOpt,
           objKeys,
           typeKeys,
-          error,
-          subError,
           hasStar,
           hasTypeOf,
           optional = false,
@@ -188,115 +188,138 @@
             if (
               (typeof _customTypes[a[i]].type === 'function') ?
                 (_customTypes[a[i]].type.call(_self, obj) === true) :
-                !_scan(obj, _customTypes[a[i]].type)
+                !_scan(obj, _customTypes[a[i]].type).error
             ) {
-              if (exclusive) {
-                error = new Error();
-                error.message = 'Expected a "' + type + '" but found a ' +
-                                '"' + a[i] + '".';
-                error.expected = type;
-                error.type = a[i];
-                error.value = obj;
-                return error;
-              } else
-                return null;
+              if (exclusive)
+                return {
+                  error: 'Expected a "' + type + '" but found a ' +
+                            '"' + a[i] + '".',
+                  expected: type,
+                  type: a[i],
+                  value: obj
+                };
+              else
+                return {
+                  expected: type,
+                  type: a[i],
+                  value: obj
+                };
             }
 
         if (obj === null || obj === undefined) {
-          if (!exclusive && !optional) {
-            error = new Error();
-            error.message = 'Expected a "' + type + '" but found a ' +
-                            '"' + typeOf + '".';
-            error.expected = type;
-            error.type = typeOf;
-            error.value = obj;
-            return error;
-          } else
-            return null;
+          if (!exclusive && !optional)
+            return {
+              error: 'Expected a "' + type + '" but found a ' +
+                        '"' + typeOf + '".',
+              expected: type,
+              type: typeOf,
+              value: obj
+            };
+          else
+            return {
+              nully: true,
+              expected: type,
+              type: typeOf,
+              value: obj
+            };
 
         } else {
           hasStar = ~a.indexOf('*');
           hasTypeOf = ~a.indexOf(typeOf);
-          if (exclusive && (hasStar || hasTypeOf)) {
-            error = new Error();
-            error.message = 'Expected a "' + type + '" but found a ' +
-                            '"' + (hasTypeOf ? typeOf : '*') + '".';
-            error.type = hasTypeOf ? typeOf : '*';
-            error.expected = type;
-            error.value = obj;
-            return error;
-
-          } else if (!exclusive && !(hasStar || hasTypeOf)) {
-            error = new Error();
-            error.message = 'Expected a "' + type + '" but found a ' +
-                            '"' + typeOf + '".';
-            error.expected = type;
-            error.type = typeOf;
-            error.value = obj;
-            return error;
-
-          } else
-            return null;
+          if (exclusive && (hasStar || hasTypeOf))
+            return {
+              error: 'Expected a "' + type + '" but found a ' +
+                        '"' + (hasTypeOf ? typeOf : '*') + '".',
+              expected: type,
+              type: hasTypeOf ? typeOf : '*',
+              value: obj
+            };
+          else if (!exclusive && !(hasStar || hasTypeOf))
+            return {
+              error: 'Expected a "' + type + '" but found a ' +
+                        '"' + typeOf + '".',
+              expected: type,
+              type: typeOf,
+              value: obj
+            };
+          else
+            return {
+              expected: type,
+              type: typeOf,
+              value: obj
+            };
         }
 
       } else if (requiredTypeOf === 'object') {
-        if (typeOf !== 'object') {
-          error = new Error();
-          error.message = 'Expected an object but found a "' + typeOf + '".';
-          error.expected = type;
-          error.type = typeOf;
-          error.value = obj;
-          return error;
-        }
+        if (typeOf !== 'object')
+          return {
+            error: 'Expected an object but found a "' + typeOf + '".',
+            expected: type,
+            type: typeOf,
+            value: obj
+          };
 
         typeKeys = Object.keys(type);
         l = typeKeys.length;
-        for (k = 0; k < l; k++)
-          if ((subError = _scan(obj[typeKeys[k]], type[typeKeys[k]]))) {
-            error = subError;
-            error.path = error.path ?
-              [typeKeys[k]].concat(error.path) :
+        nbOpt = 0;
+        for (k = 0; k < l; k++) {
+          res = _scan(obj[typeKeys[k]], type[typeKeys[k]]);
+          if (res.error) {
+            res.path = res.path ?
+              [typeKeys[k]].concat(res.path) :
               [typeKeys[k]];
-            return error;
+            return res;
           }
+          else if (res.nully)
+            nbOpt++;
+        }
 
         objKeys = Object.keys(obj);
-        l = objKeys.length;
-        for (k = 0; k < l; k++)
-          if (typeof type[objKeys[k]] === 'undefined') {
-            error = new Error();
-            error.message = 'Unexpected key "' + objKeys[k] + '".';
-            error.type = typeOf;
-            error.value = obj;
-            return error;
-          }
-
-        return null;
+        if (objKeys.length > (l - nbOpt)) {
+          l = objKeys.length;
+          for (k = 0; k < l; k++)
+            if (typeof type[objKeys[k]] === 'undefined')
+              return {
+                error: 'Unexpected key "' + objKeys[k] + '".',
+                expected: type,
+                type: typeOf,
+                value: obj
+              };
+        }
+        return {
+          expected: type,
+          type: typeOf,
+          value: obj
+        };
 
       } else if (requiredTypeOf === 'array') {
         if (type.length !== 1)
           throw new Error('Invalid type.');
 
-        if (typeOf !== 'array') {
-          error = new Error();
-          error.message = 'Expected an array but found a "' + typeOf + '".';
-          error.expected = type;
-          error.type = typeOf;
-          error.value = obj;
-          return error;
-        }
+        if (typeOf !== 'array')
+          return {
+            error: 'Expected an array but found a "' + typeOf + '".',
+            expected: type,
+            type: typeOf,
+            value: obj
+          };
 
         l = obj.length;
-        for (i = 0; i < l; i++)
-          if ((subError = _scan(obj[i], type[0]))) {
-            error = subError;
-            error.path = error.path ?
-              [i].concat(error.path) :
+        for (i = 0; i < l; i++) {
+          res = _scan(obj[i], type[0]);
+          if (res.error) {
+            res.path = res.path ?
+              [i].concat(res.path) :
               [i];
-            return error;
+            return res;
           }
+        }
 
-        return null;
+        return {
+          expected: type,
+          type: typeOf,
+          value: obj
+        };
       } else
         throw new Error('Invalid type.');
     }
@@ -494,10 +517,17 @@
      */
     this.check = function(obj, type, throws) {
       var result = _scan(obj, type);
-      if (throws && result)
-        throw result;
+      if (throws && result.error) {
+        var error = new Error();
+        error.message = result.error;
+        error.expected = result.expected;
+        error.type = result.type;
+        error.value = result.value;
+        error.path = result.path;
+        throw error;
+      }
       else
-        return !result;
+        return !result.error;
     };
 
     /**
