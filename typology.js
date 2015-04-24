@@ -107,7 +107,7 @@
      * Examples:
      * *********
      * 1. When the type matches:
-     *  > _scan('abc', 'string');
+     *  > _scan('string', 'abc');
      *  will return an object like the following :
      *  {
      *    expected: 'string',
@@ -116,7 +116,7 @@
      *  }
      *
      * 2. When a top-level type does not match:
-     *  > _scan('abc', 'number');
+     *  > _scan('number', 'abc');
      *  will return an object with like the following :
      *  {
      *    error: Expected a "number" but found a "string"
@@ -126,7 +126,7 @@
      *  }
      *
      * 3. When a sub-object type does not its type:
-     *  > _scan({ a: 'abc' }, { a: 'number' });
+     *  > _scan({ a: 'number' }, { a: 'abc' });
      *  will return an object like the following :
      *  {
      *    error: Expected a "number" but found a "string"
@@ -137,7 +137,7 @@
      *  }
      *
      * 4. When a deep sub-object type does not its type:
-     *  > _scan({ a: [ 123, 'abc' ] }, { a: ['number'] });
+     *  > _scan({ a: ['number'] }, { a: [ 123, 'abc' ] });
      *  will return an object like the following :
      *  {
      *    error: Expected a "number" but found a "string"
@@ -148,7 +148,7 @@
      *  }
      *
      * 5. When a required key is missing:
-     *  > _scan({}, { a: 'number' });
+     *  > _scan({ a: 'number' }, {});
      *  will return an object like the following :
      *  {
      *    error: Expected a "number" but found a "undefined"
@@ -159,7 +159,7 @@
      *  }
      *
      * 6. When an unexpected key is present:
-     *  > _scan({ a: 123, b: 456 }, { a: 'number' });
+     *  > _scan({ a: 'number' }, { a: 123, b: 456 });
      *  will return an object like the following :
      *  {
      *    error: Unexpected key "b"
@@ -172,7 +172,7 @@
      * @param  {type}   type The type.
      * @return {?Error}      Returns null or an Error object.
      */
-    function _scan(obj, type) {
+    function _scan(type, obj) {
       var a,
           i,
           l,
@@ -218,7 +218,7 @@
             if (
               (typeof _customTypes[a[i]].type === 'function') ?
                 (_customTypes[a[i]].type.call(_self, obj) === true) :
-                !_scan(obj, _customTypes[a[i]].type).error
+                !_scan(_customTypes[a[i]].type, obj).error
             ) {
               if (exclusive)
                 return {
@@ -293,7 +293,7 @@
         l = typeKeys.length;
         nbOpt = 0;
         for (k = 0; k < l; k++) {
-          res = _scan(obj[typeKeys[k]], type[typeKeys[k]]);
+          res = _scan(type[typeKeys[k]], obj[typeKeys[k]]);
           if (res.error) {
             res.path = res.path ?
               [typeKeys[k]].concat(res.path) :
@@ -336,7 +336,7 @@
 
         l = obj.length;
         for (i = 0; i < l; i++) {
-          res = _scan(obj[i], type[0]);
+          res = _scan(type[0], obj[i]);
           if (res.error) {
             res.path = res.path ?
               [i].concat(res.path) :
@@ -519,34 +519,34 @@
     };
 
     /**
-     * This method validates some value against a given type. If the flag throws
-     * has a truthy value, then the method will throw an error instead of
-     * returning false.
+     * This method validates some value against a given type. It works exactly
+     * as the _scan method, but will return true if the value matches the given
+     * type and false else, instead of reporting objects.
      *
      * To know more about the error thrown, you can read the documentation of
      * the private method _scan.
      *
      * Examples:
      * *********
-     * > types.check({ a: 1 }, 'object');                      // returns true
-     * > types.check({ a: 1 }, { a: 'string' });               // returns true
-     * > types.check({ a: 1 }, { a: 'string', b: '?number' }); // returns true
+     * > types.check('object', { a: 1 });                      // returns true
+     * > types.check({ a: 'string' }, { a: 1 });               // returns true
+     * > types.check({ a: 'string', b: '?number' }, { a: 1 }); // returns true
      *
-     * > types.check({ a: 1 }, { a: 'string', b: 'number' }); // returns false
-     * > types.check({ a: 1 }, { a: 'number' });              // returns false
-     * > types.check({ a: 1 }, 'array');                      // returns false
+     * > types.check({ a: 'string', b: 'number' }, { a: 1 }); // returns false
+     * > types.check({ a: 'number' }, { a: 1 });              // returns false
+     * > types.check('array', { a: 1 });                      // returns false
      *
-     * > types.check({ a: 1 }, 'array', true); // throws an Error
+     * > types.check('array', { a: 1 }, true); // throws an Error
      *
-     * @param  {*}        value  Anything.
      * @param  {type}     type   A valid type.
+     * @param  {*}        value  Anything.
      * @param  {?boolean} throws If true, this method will throw an error
      *                           instead of returning false.
      * @return {boolean}         Returns true if the value matches the type, and
      *                           not else.
      */
-    this.check = function(obj, type, throws) {
-      var result = _scan(obj, type);
+    this.check = function(type, obj, throws) {
+      var result = _scan(type, obj);
       if (throws && result.error) {
         var error = new Error();
         error.message = result.error;

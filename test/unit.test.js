@@ -54,8 +54,8 @@ describe('Typology', function() {
     assert.deepEqual(types.isValid('!?string'), false);
     assert.deepEqual(types.isValid('?!string'), false);
     assert.deepEqual(types.isValid('!string|object'), true);
-    assert.deepEqual(types.check('boolean', 'type'), true);
-    assert.deepEqual(types.check('null', 'type'), false);
+    assert.deepEqual(types.check('type', 'boolean'), true);
+    assert.deepEqual(types.check('type', 'null'), false);
   });
 
       // [ value, type ]
@@ -134,19 +134,19 @@ describe('Typology', function() {
   it('types.check', function() {
     // Cases that match:
     doMatch.forEach(function(arr) {
-      assert.deepEqual(types.check(arr[0], arr[1]), true);
+      assert.deepEqual(types.check(arr[1], arr[0]), true);
     });
 
     // Cases that do not match:
     dontMatch.forEach(function(arr) {
-      assert.deepEqual(types.check(arr[0], arr[1]), false);
+      assert.deepEqual(types.check(arr[1], arr[0]), false);
     });
 
     // Type errors:
     typeError.forEach(function(arr) {
       assert.throws(
         function() {
-          types.check(arr[0], arr[1]);
+          types.check(arr[1], arr[0]);
         },
         /Invalid type/
       );
@@ -156,14 +156,14 @@ describe('Typology', function() {
   it('types.check (with "throws" set to true)', function() {
     // Cases that match:
     doMatch.forEach(function(arr) {
-      assert.deepEqual(types.check(arr[0], arr[1], true), true);
+      assert.deepEqual(types.check(arr[1], arr[0], true), true);
     });
 
     // Cases that do not match:
     dontMatch.forEach(function(arr, index) {
       assert.throws(
         function() {
-          types.check(arr[0], arr[1], true);
+          types.check(arr[1], arr[0], true);
         },
         function(err) {
           if (
@@ -186,7 +186,7 @@ describe('Typology', function() {
     typeError.forEach(function(arr) {
       assert.throws(
         function() {
-          types.check(arr[0], arr[1]);
+          types.check(arr[1], arr[0]);
         },
         /Invalid type/
       );
@@ -207,9 +207,9 @@ describe('Typology', function() {
     });
 
     assert.deepEqual(types.isValid('integer'), true);
-    assert.deepEqual(types.check(1, 'integer'), true);
-    assert.deepEqual(types.check(1.2, 'integer'), false);
-    assert.deepEqual(types.check({a: 1}, {a: 'integer'}), true);
+    assert.deepEqual(types.check('integer', 1), true);
+    assert.deepEqual(types.check('integer', 1.2), false);
+    assert.deepEqual(types.check({a: 'integer'}, {a: 1}), true);
 
     // Create an advanced type and use it:
     types.add('template', {
@@ -222,22 +222,22 @@ describe('Typology', function() {
     });
 
     assert.deepEqual(types.isValid('template'), true);
-    assert.deepEqual(types.check({
+    assert.deepEqual(types.check('template', {
       a: 42,
       b: 'toto',
       c: {
         d: '42'
       },
       e: 2
-    }, 'template'), true);
-    assert.deepEqual(types.check({
+    }), true);
+    assert.deepEqual(types.check('template', {
       a: 42,
       b: 'toto',
       c: {
         d: '42'
       },
       e: 2.4
-    }, 'template'), false);
+    }), false);
 
     // Create a recursive type:
     types.add({
@@ -248,10 +248,10 @@ describe('Typology', function() {
     });
 
     assert.deepEqual(types.isValid('s'), true);
-    assert.deepEqual(types.check({}, 's'), true);
-    assert.deepEqual(types.check({ k: {} }, 's'), true);
-    assert.deepEqual(types.check({ k: { k: {} } }, 's'), true);
-    assert.deepEqual(types.check({ k: { k: {}, a: 42 } }, 's'), false);
+    assert.deepEqual(types.check('s', {}), true);
+    assert.deepEqual(types.check('s', { k: {} }), true);
+    assert.deepEqual(types.check('s', { k: { k: {} } }), true);
+    assert.deepEqual(types.check('s', { k: { k: {}, a: 42 } }), false);
 
     // Create two self referencing types:
     types.add({
@@ -268,26 +268,26 @@ describe('Typology', function() {
 
     assert.deepEqual(types.isValid('s1'), true);
     assert.deepEqual(types.isValid('s2'), true);
-    assert.deepEqual(types.check({}, 's1'), true);
-    assert.deepEqual(types.check({ s2: {} }, 's1'), true);
-    assert.deepEqual(types.check({ s2: { s1: {} } }, 's1'), true);
-    assert.deepEqual(types.check({ s2: { s1: {}, a: 42 } }, 's1'), false);
+    assert.deepEqual(types.check('s1', {}), true);
+    assert.deepEqual(types.check('s1', { s2: {} }), true);
+    assert.deepEqual(types.check('s1', { s2: { s1: {} } }), true);
+    assert.deepEqual(types.check('s1', { s2: { s1: {}, a: 42 } }), false);
 
     types.add('non-primitive', '!primitive');
 
     assert.strictEqual(types.isValid('non-primitive'), true);
-    assert.strictEqual(types.check({hello: 'world'}, 'non-primitive'), true);
-    assert.strictEqual(types.check(42, 'non-primitive'), false);
-    assert.strictEqual(types.check('hello', 'non-primitive'), false);
+    assert.strictEqual(types.check('non-primitive', {hello: 'world'}), true);
+    assert.strictEqual(types.check('non-primitive', 42), false);
+    assert.strictEqual(types.check('non-primitive', 'hello'), false);
 
     // Check scope
     types.add('integerString', function(v) {
-      return this.check(v, 'string') && this.check(+v, 'integer');
+      return this.check('string', v) && this.check('integer', +v);
     });
-    assert.strictEqual(types.check('123', 'integerString'), true);
-    assert.strictEqual(types.check(123, 'integerString'), false);
-    assert.strictEqual(types.check('123.456', 'integerString'), false);
-    assert.strictEqual(types.check('abc', 'integerString'), false);
+    assert.strictEqual(types.check('integerString', '123'), true);
+    assert.strictEqual(types.check('integerString', 123), false);
+    assert.strictEqual(types.check('integerString', '123.456'), false);
+    assert.strictEqual(types.check('integerString', 'abc'), false);
 
     // Returns this
     assert.strictEqual(types.add('f1', '?string'), types);
@@ -311,8 +311,8 @@ describe('Typology', function() {
     });
 
     assert.strictEqual(loadedTypology.isValid('napoleon'), true);
-    assert.strictEqual(loadedTypology.check('Napoleon', 'napoleon'), true);
-    assert.strictEqual(loadedTypology.check('Napoleon', '!napoleon'), false);
+    assert.strictEqual(loadedTypology.check('napoleon', 'Napoleon'), true);
+    assert.strictEqual(loadedTypology.check('!napoleon', 'Napoleon'), false);
 
     assert.throws(function() {
       new Typology(42);
