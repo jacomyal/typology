@@ -153,44 +153,74 @@ describe('Typology', function() {
     });
   });
 
-  it('types.check (with "throws" set to true)', function() {
-    // Cases that match:
-    doMatch.forEach(function(arr) {
-      assert.deepEqual(types.check(arr[1], arr[0], true), true);
-    });
+  it('types.scan', function() {
+    // 1. When the type matches:
+    assert.deepEqual(
+      types.scan('string', 'abc'),
+      {
+        expected: 'string',
+        type: 'string',
+        value: 'abc'
+      }
+    );
 
-    // Cases that do not match:
-    dontMatch.forEach(function(arr, index) {
-      assert.throws(
-        function() {
-          types.check(arr[1], arr[0], true);
-        },
-        function(err) {
-          if (
-            (err instanceof Error) &&
-            (!arr[2] || arr[2].test(err.message)) &&
-            (!arr[3] || _.isEqual(err.path, arr[3]))
-          )
-            return true;
-          else {
-            console.log('Failing index:', index);
-            console.log(' - Message:', err.message, ' - expected:', arr[2]);
-            console.log(' - Path:', err.path, ' - expected:', arr[3]);
-            console.log(' - More info:', err);
-          }
-        }
-      );
-    });
+    // 2. When a top-level type does not match:
+    assert.deepEqual(
+      types.scan('number', 'abc'),
+      {
+        error: 'Expected a "number" but found a "string".',
+        expected: 'number',
+        type: 'string',
+        value: 'abc'
+      }
+    );
 
-    // Type errors:
-    typeError.forEach(function(arr) {
-      assert.throws(
-        function() {
-          types.check(arr[1], arr[0]);
-        },
-        /Invalid type/
-      );
-    });
+    // 3. When a sub-object type does not its type:
+    assert.deepEqual(
+      types.scan({ a: 'number' }, { a: 'abc' }),
+      {
+        error: 'Expected a "number" but found a "string".',
+        expected: 'number',
+        type: 'string',
+        value: 'abc',
+        path: [ 'a' ]
+      }
+    );
+
+    // 4. When a deep sub-object type does not its type:
+    assert.deepEqual(
+      types.scan({ a: ['number'] }, { a: [ 123, 'abc' ] }),
+      {
+        error: 'Expected a "number" but found a "string".',
+        expected: 'number',
+        type: 'string',
+        value: 'abc',
+        path: [ 'a', 1 ]
+      }
+    );
+
+    // 5. When a required key is missing:
+    assert.deepEqual(
+      types.scan({ a: 'number' }, {}),
+      {
+        error: 'Expected a "number" but found a "undefined".',
+        expected: 'number',
+        type: 'undefined',
+        value: undefined,
+        path: [ 'a' ]
+      }
+    );
+
+    // 6. When an unexpected key is present:
+    assert.deepEqual(
+      types.scan({ a: 'number' }, { a: 123, b: 456 }),
+      {
+        error: 'Unexpected key "b".',
+        expected: { a: 'number' },
+        type: 'object',
+        value: { a: 123, b: 456 }
+      }
+    );
   });
 
   it('types.add', function() {

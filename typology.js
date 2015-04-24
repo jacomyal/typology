@@ -99,6 +99,13 @@
      */
     var _customTypes = {};
 
+
+
+    /**
+     * INSTANCE METHODS:
+     * *****************
+     */
+
     /**
      * This function will recursively scan an object to check wether or not it
      * matches a given type. It will return null if it matches, and an Error
@@ -107,7 +114,7 @@
      * Examples:
      * *********
      * 1. When the type matches:
-     *  > _scan('string', 'abc');
+     *  > types.scan('string', 'abc');
      *  will return an object like the following :
      *  {
      *    expected: 'string',
@@ -116,53 +123,53 @@
      *  }
      *
      * 2. When a top-level type does not match:
-     *  > _scan('number', 'abc');
+     *  > types.scan('number', 'abc');
      *  will return an object with like the following :
      *  {
-     *    error: Expected a "number" but found a "string"
+     *    error: 'Expected a "number" but found a "string".',
      *    expected: 'number',
      *    type: 'string',
      *    value: 'abc'
      *  }
      *
      * 3. When a sub-object type does not its type:
-     *  > _scan({ a: 'number' }, { a: 'abc' });
+     *  > types.scan({ a: 'number' }, { a: 'abc' });
      *  will return an object like the following :
      *  {
-     *    error: Expected a "number" but found a "string"
+     *    error: 'Expected a "number" but found a "string".',
      *    expected: 'number',
      *    type: 'string',
-     *    value: 'abc'
+     *    value: 'abc',
      *    path: [ 'a' ]
      *  }
      *
      * 4. When a deep sub-object type does not its type:
-     *  > _scan({ a: ['number'] }, { a: [ 123, 'abc' ] });
+     *  > types.scan({ a: ['number'] }, { a: [ 123, 'abc' ] });
      *  will return an object like the following :
      *  {
-     *    error: Expected a "number" but found a "string"
+     *    error: 'Expected a "number" but found a "string".',
      *    expected: 'number',
      *    type: 'string',
-     *    value: 'abc'
+     *    value: 'abc',
      *    path: [ 'a', 1 ]
      *  }
      *
      * 5. When a required key is missing:
-     *  > _scan({ a: 'number' }, {});
+     *  > types.scan({ a: 'number' }, {});
      *  will return an object like the following :
      *  {
-     *    error: Expected a "number" but found a "undefined"
+     *    error: 'Expected a "number" but found a "undefined".',
      *    expected: 'number',
      *    type: 'undefined',
-     *    value: 'undefined',
+     *    value: undefined,
      *    path: [ 'a' ]
      *  }
      *
      * 6. When an unexpected key is present:
-     *  > _scan({ a: 'number' }, { a: 123, b: 456 });
+     *  > types.scan({ a: 'number' }, { a: 123, b: 456 });
      *  will return an object like the following :
      *  {
-     *    error: Unexpected key "b"
+     *    error: 'Unexpected key "b".',
      *    expected: { a: 'number' },
      *    type: 'object',
      *    value: { a: 123, b: 456 }
@@ -172,7 +179,7 @@
      * @param  {type}   type The type.
      * @return {?Error}      Returns null or an Error object.
      */
-    function _scan(type, obj) {
+    this.scan = function(type, obj) {
       var a,
           i,
           l,
@@ -218,7 +225,7 @@
             if (
               (typeof _customTypes[a[i]].type === 'function') ?
                 (_customTypes[a[i]].type.call(_self, obj) === true) :
-                !_scan(_customTypes[a[i]].type, obj).error
+                !this.scan(_customTypes[a[i]].type, obj).error
             ) {
               if (exclusive)
                 return {
@@ -293,7 +300,7 @@
         l = typeKeys.length;
         nbOpt = 0;
         for (k = 0; k < l; k++) {
-          res = _scan(type[typeKeys[k]], obj[typeKeys[k]]);
+          res = this.scan(type[typeKeys[k]], obj[typeKeys[k]]);
           if (res.error) {
             res.path = res.path ?
               [typeKeys[k]].concat(res.path) :
@@ -336,7 +343,7 @@
 
         l = obj.length;
         for (i = 0; i < l; i++) {
-          res = _scan(type[0], obj[i]);
+          res = this.scan(type[0], obj[i]);
           if (res.error) {
             res.path = res.path ?
               [i].concat(res.path) :
@@ -352,14 +359,7 @@
         };
       } else
         throw new Error('Invalid type.');
-    }
-
-
-
-    /**
-     * INSTANCE METHODS:
-     * *****************
-     */
+    };
 
     /**
      * This method registers a custom type into the Typology instance. A type
@@ -520,11 +520,8 @@
 
     /**
      * This method validates some value against a given type. It works exactly
-     * as the _scan method, but will return true if the value matches the given
+     * as the #scan method, but will return true if the value matches the given
      * type and false else, instead of reporting objects.
-     *
-     * To know more about the error thrown, you can read the documentation of
-     * the private method _scan.
      *
      * Examples:
      * *********
@@ -536,28 +533,13 @@
      * > types.check({ a: 'number' }, { a: 1 });              // returns false
      * > types.check('array', { a: 1 });                      // returns false
      *
-     * > types.check('array', { a: 1 }, true); // throws an Error
-     *
-     * @param  {type}     type   A valid type.
-     * @param  {*}        value  Anything.
-     * @param  {?boolean} throws If true, this method will throw an error
-     *                           instead of returning false.
-     * @return {boolean}         Returns true if the value matches the type, and
-     *                           not else.
+     * @param  {type}    type   A valid type.
+     * @param  {*}       value  Anything.
+     * @return {boolean}        Returns true if the value matches the type, and
+     *                          not else.
      */
-    this.check = function(type, obj, throws) {
-      var result = _scan(type, obj);
-      if (throws && result.error) {
-        var error = new Error();
-        error.message = result.error;
-        error.expected = result.expected;
-        error.type = result.type;
-        error.value = result.value;
-        error.path = result.path;
-        throw error;
-      }
-      else
-        return !result.error;
+    this.check = function(type, obj) {
+      return !this.scan(type, obj).error;
     };
 
     /**
