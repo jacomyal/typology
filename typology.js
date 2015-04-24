@@ -27,7 +27,7 @@
  * from, out of or in connection with the software or the use or other dealings
  * in the Software.
  */
-(function(global) {
+(function(scope) {
   'use strict';
 
   /**
@@ -669,5 +669,5 @@
       return types;
     });
   else
-    global.types = types;
+    scope.types = types;
 })(this);
