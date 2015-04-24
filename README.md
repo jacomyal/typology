@@ -143,6 +143,7 @@ types.scan(
 >>>   type: 'undefined',
 >>>   value: undefined,
 >>>   path: [ 'age' ] }
+```
 
 #### Create your own typology to add custom types
 
