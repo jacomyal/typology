@@ -130,25 +130,55 @@ var myCustomType = {
 ```js
 var types = require('typology');
 
-types.check(myVariable, myType);
+types.check(myType, myVariable);
 
 // Example
-types.check(1, 'number');
+types.check('number', 1);
 >>> true
 
 types.check(
   {
-    firstname: 'Joachim',
-    lastname: 'Murat'
-  },
-  {
     firstname: 'string',
     lastname: 'string',
     age: 'number'
+  },
+  {
+    firstname: 'Joachim',
+    lastname: 'Murat'
   }
 );
 >>> false
 ```
+
+#### Getting more information about what does not match
+
+```js
+var types = require('typology');
+
+types.scan(myType, myVariable);
+
+// Example
+types.scan('number', 1);
+>>> { expected: 'number',
+>>>   type: 'number',
+>>>   value: 1 }
+
+types.scan(
+  {
+    firstname: 'string',
+    lastname: 'string',
+    age: 'number'
+  },
+  {
+    firstname: 'Joachim',
+    lastname: 'Murat'
+  }
+);
+>>> { error: 'Expected a "number" but found a "undefined".',
+>>>   expected: 'number',
+>>>   type: 'undefined',
+>>>   value: undefined,
+>>>   path: [ 'age' ] }
 
 #### Create your own typology to add custom types
 
@@ -168,11 +198,11 @@ myTypology.add('User', {
 });
 
 // Then you can use it likewise
-myTypology.check({hello: 'world'}, 'User');
+myTypology.check('User', {hello: 'world'});
 >>> false
 
 // And use it in other types' definition
-myTypology.check(myVar, 'User|number');
+myTypology.check('User|number', myVar);
 ```
 
 #### Checking whether a custom type's definition is valid
