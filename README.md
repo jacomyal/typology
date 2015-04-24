@@ -65,50 +65,14 @@ var customType = {
 
 #### Custom types syntax
 
-<table>
-  <tr>
-    <td><b>Expression</b></td>
-    <td><b>Description</b></td>
-    <td><b>Examples</b></td>
-    <td><b>Validates</b></td>
-  </tr>
-  <tr>
-    <td><code>'type'</code></td>
-    <td>required</td>
-    <td><code>'string'</code></td>
-    <td><code>'hello'</code></td>
-  </tr>
-  <tr>
-    <td><code>'?type'</code></td>
-    <td>optional</td>
-    <td><code>'?string'</code></td>
-    <td><code>'hello'</code>, <code>undefined</code>, <code>null</code></td>
-  </tr>
-  <tr>
-    <td><code>'type1|type2'</code></td>
-    <td>multi-types</td>
-    <td><code>'string|number'</code></td>
-    <td><code>'hello'</code>, <code>45</code>, <code>2.34</code></td>
-  </tr>
-  <tr>
-    <td><code>{prop: 'type'}</code></td>
-    <td>complex</td>
-    <td><code>{firstname: 'string'}</code></td>
-    <td><code>{firstname: 'Joachim'}</code></td>
-  </tr>
-  <tr>
-    <td><code>['type']</code></td>
-    <td>lists</td>
-    <td><code>['number']</code></td>
-    <td><code>[1, 2, 3]</code></td>
-  </tr>
-  <tr>
-    <td><code>'!type'</code></td>
-    <td>exclusive</td>
-    <td><code>'!string'</code></td>
-    <td><code>42</code></td>
-  </tr>
-</table>
+|Expression|Description|Examples|Validates|
+|---|---|---|---|
+|`'type'`|required|`'string'`|`'hello'`|
+|`'?type'`|optional|`'?string'`|`'hello'`, `undefined`, `null`|
+|`'type1|type2'`|multi-types|`'string|number'`|`'hello'`, `45`, `2.34`|
+|`{prop: 'type'}`|complex|`{firstname: 'string'}`|`{firstname: 'Joachim'}`|
+|`['type']`|lists|`['number']`|`[1, 2, 3]`|
+|`'!type'`|exclusive|`'!string'`|`42`|
 
 Note also that expression can be combined. For instance `'?string|number'` means an optional string or number variable and `'!string|object'` means anything but a string or an object.
 
