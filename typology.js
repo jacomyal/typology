@@ -7,7 +7,10 @@
  *
  * License:
  * --------
- * Copyright © 2014 Alexis Jacomy (@jacomyal), Guillaume Plique (@Yomguithereal)
+ * Copyright © 2014-2016
+ *  - Alexis Jacomy (@jacomyal)
+ *  - Guillaume Plique (@Yomguithereal)
+ *  - Jérémy Lesceau (@jlesceau)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
