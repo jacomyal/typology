@@ -72,7 +72,14 @@
           'Function',
           'Arguments',
           'RegExp',
-          'Date'
+          'Date',
+
+          // ES2015
+          'Map',
+          'Set',
+          'WeakMap',
+          'WeakSet',
+          'Symbol'
         ];
 
     // Fill types
