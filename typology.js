@@ -629,7 +629,7 @@
 
     // Add a type "primitive" to match every primitive types (including null):
     this.add('primitive', function(v) {
-      return !v || !(v instanceof Object || typeof v === 'object');
+      return v !== Object(v);
     });
 
     // Adding custom types at instantiation:
