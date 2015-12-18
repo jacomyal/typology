@@ -89,6 +89,17 @@ var myCustomType = {
 }
 ```
 
+*Using functions to perform ad-hoc validation*
+
+```js
+var myCustomType = {
+  age: 'number',
+  name: function(v) {
+    return v === 'Jack' || v === 'John';
+  }
+};
+```
+
 #### Validate a variable against a custom type
 
 ```js

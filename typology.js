@@ -332,6 +332,20 @@
           value: obj
         };
 
+      } else if (requiredTypeOf === 'function') {
+
+        var output = {
+          expected: type,
+          type: typeOf,
+          value: obj
+        };
+
+        // Just applying a function
+        if (!type(obj))
+          output.error = 'The target did not pass the given test (function).';
+
+        return output;
+
       } else if (requiredTypeOf === 'array') {
         if (type.length !== 1)
           throw new Error('Invalid type.');

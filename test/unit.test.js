@@ -93,7 +93,9 @@ describe('Typology', function() {
 /* 30 */[ 'abc', 'primitive' ],
         [ undefined, 'primitive' ],
         [ null, 'primitive' ],
-        [ true, 'primitive' ]
+        [ true, 'primitive' ],
+        [ 4, function(v) { return v === 4; } ],
+        [ {hello: 'world'}, {hello: function(v) { return typeof v === 'string'; }} ]
       ],
 
       // [ value, type, errorMessage?, path? ]
@@ -123,7 +125,9 @@ describe('Typology', function() {
         [ {}, 'primitive', /Expected a "primitive" but found a "object"/, undefined ],
         [ [], 'primitive', /Expected a "primitive" but found a "array"/, undefined ],
         [ Object.create(null), 'primitive', /Expected a "primitive" but found a "object"/, undefined ],
-/* 25 */[ {b: 555, c:'abs'}, {a: '?string', b:'number'}, /Unexpected key "c"/, undefined]
+/* 25 */[ {b: 555, c:'abs'}, {a: '?string', b:'number'}, /Unexpected key "c"/, undefined],
+        [ 4, function(v) { return v === 5; } ],
+        [ {hello: 'world'}, {hello: function(v) { return v === 'monde'; }}]
       ],
 
       typeError = [
