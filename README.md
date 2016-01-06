@@ -36,6 +36,7 @@ types.get(/abc/);
 // 'function', 'array', 'arguments'
 // 'regexp', 'date', 'object'
 // 'null', 'undefined', 'primitive'
+// 'map', 'set', 'weakmap', 'weakset', 'symbol'
 ```
 
 ### Deal with custom types
