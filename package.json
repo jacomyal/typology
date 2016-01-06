@@ -1,6 +1,6 @@
 {
   "name": "typology",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A data validation library for Node.js and the browser.",
   "main": "typology.js",
   "scripts": {
