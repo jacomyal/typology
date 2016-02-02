@@ -632,6 +632,10 @@
         return type.length === 1 ?
           this.isValid(type[0]) :
           false;
+
+      else if (typeOf === 'function')
+        return true;
+
       else
         return false;
     };

@@ -54,6 +54,7 @@ describe('Typology', function() {
     assert.deepEqual(types.isValid('!?string'), false);
     assert.deepEqual(types.isValid('?!string'), false);
     assert.deepEqual(types.isValid('!string|object'), true);
+    assert.deepEqual(types.isValid(function() {}), true);
     assert.deepEqual(types.check('type', 'boolean'), true);
     assert.deepEqual(types.check('type', 'null'), false);
   });
