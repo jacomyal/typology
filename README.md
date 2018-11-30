@@ -70,7 +70,7 @@ var customType = {
 |---|---|---|---|
 |`'type'`|required|`'string'`|`'hello'`|
 |`'?type'`|optional|`'?string'`|`'hello'`, `undefined`, `null`|
-|`'type1|type2'`|multi-types|`'string|number'`|`'hello'`, `45`, `2.34`|
+|`'type1\|type2'`|multi-types|`'string\|number'`|`'hello'`, `45`, `2.34`|
 |`{prop: 'type'}`|complex|`{firstname: 'string'}`|`{firstname: 'Joachim'}`|
 |`['type']`|lists|`['number']`|`[1, 2, 3]`|
 |`'!type'`|exclusive|`'!string'`|`42`|
