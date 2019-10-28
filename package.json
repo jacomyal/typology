@@ -4,7 +4,12 @@
   "description": "A data validation library for Node.js and the browser.",
   "main": "typology.js",
   "scripts": {
-    "test": "gulp lint test"
+    "test": "nyc mocha"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "repository": {
     "type": "git",
@@ -25,14 +30,11 @@
   },
   "homepage": "https://github.com/jacomyal/typology",
   "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-gjslint": "^0.1.4",
-    "gulp-header": "^1.2.2",
-    "gulp-jshint": "^1.10.0",
-    "gulp-mocha": "^2.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.2.0",
-    "jshint-stylish": "^1.0.1",
-    "lodash": "^3.7.0"
+    "husky": "^3.0.9",
+    "lodash": "^4.17.15",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^2.0.0"
   }
 }

@@ -16,8 +16,6 @@ npm install typology
 npm install git+https://github.com/jacomyal/typology.git
 ```
 
-Include the [`typology.js`](./typology.js) (or the minified version [`typology.min.js`](./typology.min.js)) file client-side if you do not want to use Browserify or a similar library.
-
 ## Usage
 
 ### Get the native type of a given variable
@@ -204,6 +202,16 @@ types.isValid('randomcrap');
 Contributions are welcome. Please be sure to add and pass unit tests if relevant before submitting any code.
 
 To setup the project, just install npm dependencies with `npm install` and run tests with `npm test`.
+
+## Code style
+
+We use prettier for the code style, with its default setup. It is plugged as a precommit hook, so you don't have to worry about it.
+
+Also, as an internal convention, please:
+
+ - Write `__myVar` for any global private variable
+ - Write `_myVar` for any instance private variable
+ - Write `myVar` any local variable
 
 ## License
 
