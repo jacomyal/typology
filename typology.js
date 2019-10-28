@@ -602,7 +602,7 @@ Typology.call(types);
 
 // Version:
 Object.defineProperty(types, "version", {
-  value: "1.2.0"
+  value: "1.2.1"
 });
 
 /**
