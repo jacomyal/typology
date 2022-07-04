@@ -3,8 +3,12 @@
   "version": "1.2.1",
   "description": "A data validation library for Node.js and the browser.",
   "main": "typology.js",
+  "files": [
+    "typology.js",
+    "typology.d.ts"
+  ],
   "scripts": {
-    "test": "nyc mocha"
+    "test": "mocha -r ts-node/register test/unit.test.ts"
   },
   "husky": {
     "hooks": {
@@ -30,11 +34,16 @@
   },
   "homepage": "https://github.com/jacomyal/typology",
   "devDependencies": {
+    "@types/chai": "^4.3.1",
+    "@types/lodash": "^4.14.182",
+    "@types/mocha": "^9.1.1",
+    "chai": "^4.3.6",
     "husky": "^3.0.9",
-    "lodash": "^4.17.15",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
+    "lodash": "^4.17.21",
+    "mocha": "^10.0.0",
     "prettier": "^1.18.2",
-    "pretty-quick": "^2.0.0"
+    "pretty-quick": "^2.0.0",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
   }
 }
