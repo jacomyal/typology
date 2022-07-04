@@ -12,35 +12,35 @@ const __class2type = {};
 /**
  * This array is the list of every types considered native by typology:
  */
-const __nativeTypes = { "*": true };
+const __nativeTypes = { '*': true };
 
 (function() {
   let k;
   let className;
   const classes = [
-    "Boolean",
-    "Number",
-    "String",
-    "Object",
-    "Array",
-    "Function",
-    "Arguments",
-    "RegExp",
-    "Date",
+    'Boolean',
+    'Number',
+    'String',
+    'Object',
+    'Array',
+    'Function',
+    'Arguments',
+    'RegExp',
+    'Date',
 
     // ES2015
-    "Map",
-    "Set",
-    "WeakMap",
-    "WeakSet",
-    "Symbol"
+    'Map',
+    'Set',
+    'WeakMap',
+    'WeakSet',
+    'Symbol'
   ];
 
   // Fill types
   for (k in classes) {
     className = classes[k];
     __nativeTypes[className.toLowerCase()] = true;
-    __class2type["[object " + className + "]"] = className.toLowerCase();
+    __class2type['[object ' + className + ']'] = className.toLowerCase();
   }
 })();
 
@@ -54,7 +54,7 @@ const __nativeTypes = { "*": true };
 function __getNativeType(value) {
   return value === null || value === undefined
     ? String(value)
-    : __class2type[Object.prototype.toString.call(value)] || "object";
+    : __class2type[Object.prototype.toString.call(value)] || 'object';
 }
 
 /**
@@ -169,28 +169,27 @@ function Typology(defs) {
     const typeOf = __getNativeType(obj);
     const requiredTypeOf = __getNativeType(type);
 
-    if (requiredTypeOf === "string") {
-      a = type.replace(/^[\?\!]/, "").split(/\|/);
+    if (requiredTypeOf === 'string') {
+      a = type.replace(/^[\?\!]/, '').split(/\|/);
       l = a.length;
       for (i = 0; i < l; i++)
-        if (!__nativeTypes[a[i]] && typeof _customTypes[a[i]] === "undefined")
-          throw new Error("Invalid type.");
+        if (!__nativeTypes[a[i]] && typeof _customTypes[a[i]] === 'undefined')
+          throw new Error('Invalid type.');
 
-      if (type.charAt(0) === "?") optional = true;
-      else if (type.charAt(0) === "!") exclusive = true;
+      if (type.charAt(0) === '?') optional = true;
+      else if (type.charAt(0) === '!') exclusive = true;
 
       l = a.length;
       for (i = 0; i < l; i++)
-        if (typeof _customTypes[a[i]] !== "undefined")
+        if (typeof _customTypes[a[i]] !== 'undefined')
           if (
-            typeof _customTypes[a[i]].type === "function"
+            typeof _customTypes[a[i]].type === 'function'
               ? _customTypes[a[i]].type.call(_self, obj) === true
               : !this.scan(_customTypes[a[i]].type, obj).error
           ) {
             if (exclusive)
               return {
-                error:
-                  'Expected a "' + type + '" but found a ' + '"' + a[i] + '".',
+                error: 'Expected a "' + type + '" but found a ' + '"' + a[i] + '".',
                 expected: type,
                 type: a[i],
                 value: obj
@@ -206,8 +205,7 @@ function Typology(defs) {
       if (obj === null || obj === undefined) {
         if (!exclusive && !optional)
           return {
-            error:
-              'Expected a "' + type + '" but found a ' + '"' + typeOf + '".',
+            error: 'Expected a "' + type + '" but found a ' + '"' + typeOf + '".',
             expected: type,
             type: typeOf,
             value: obj
@@ -220,25 +218,19 @@ function Typology(defs) {
             value: obj
           };
       } else {
-        hasStar = ~a.indexOf("*");
+        hasStar = ~a.indexOf('*');
         hasTypeOf = ~a.indexOf(typeOf);
         if (exclusive && (hasStar || hasTypeOf))
           return {
             error:
-              'Expected a "' +
-              type +
-              '" but found a ' +
-              '"' +
-              (hasTypeOf ? typeOf : "*") +
-              '".',
+              'Expected a "' + type + '" but found a ' + '"' + (hasTypeOf ? typeOf : '*') + '".',
             expected: type,
-            type: hasTypeOf ? typeOf : "*",
+            type: hasTypeOf ? typeOf : '*',
             value: obj
           };
         else if (!exclusive && !(hasStar || hasTypeOf))
           return {
-            error:
-              'Expected a "' + type + '" but found a ' + '"' + typeOf + '".',
+            error: 'Expected a "' + type + '" but found a ' + '"' + typeOf + '".',
             expected: type,
             type: typeOf,
             value: obj
@@ -250,8 +242,8 @@ function Typology(defs) {
             value: obj
           };
       }
-    } else if (requiredTypeOf === "object") {
-      if (typeOf !== "object")
+    } else if (requiredTypeOf === 'object') {
+      if (typeOf !== 'object')
         return {
           error: 'Expected an object but found a "' + typeOf + '".',
           expected: type,
@@ -274,7 +266,7 @@ function Typology(defs) {
       if (objKeys.length > l - nbOpt) {
         l = objKeys.length;
         for (k = 0; k < l; k++)
-          if (typeof type[objKeys[k]] === "undefined")
+          if (typeof type[objKeys[k]] === 'undefined')
             return {
               error: 'Unexpected key "' + objKeys[k] + '".',
               expected: type,
@@ -287,7 +279,7 @@ function Typology(defs) {
         type: typeOf,
         value: obj
       };
-    } else if (requiredTypeOf === "function") {
+    } else if (requiredTypeOf === 'function') {
       const output = {
         expected: type,
         type: typeOf,
@@ -295,14 +287,13 @@ function Typology(defs) {
       };
 
       // Just applying a function
-      if (!type(obj))
-        output.error = "The target did not pass the given test (function).";
+      if (!type(obj)) output.error = 'The target did not pass the given test (function).';
 
       return output;
-    } else if (requiredTypeOf === "array") {
-      if (type.length !== 1) throw new Error("Invalid type.");
+    } else if (requiredTypeOf === 'array') {
+      if (type.length !== 1) throw new Error('Invalid type.');
 
-      if (typeOf !== "array")
+      if (typeOf !== 'array')
         return {
           error: 'Expected an array but found a "' + typeOf + '".',
           expected: type,
@@ -324,7 +315,7 @@ function Typology(defs) {
         type: typeOf,
         value: obj
       };
-    } else throw new Error("Invalid type.");
+    } else throw new Error('Invalid type.');
   };
 
   /**
@@ -389,37 +380,32 @@ function Typology(defs) {
 
     // Polymorphism:
     if (arguments.length === 1) {
-      if (this.get(a1) === "object") {
+      if (this.get(a1) === 'object') {
         o = a1;
         id = o.id;
         type = o.type;
       } else
         throw new Error(
-          "If types.add is called with one argument, " +
-            "this one has to be an object."
+          'If types.add is called with one argument, ' + 'this one has to be an object.'
         );
     } else if (arguments.length === 2) {
-      if (typeof a1 !== "string" || !a1)
+      if (typeof a1 !== 'string' || !a1)
         throw new Error(
-          "If types.add is called with more than one " +
-            "argument, the first one must be the string id."
+          'If types.add is called with more than one ' +
+            'argument, the first one must be the string id.'
         );
       else id = a1;
 
       type = a2;
-    } else
-      throw new Error(
-        "types.add has to be called " + "with one or two arguments."
-      );
+    } else throw new Error('types.add has to be called ' + 'with one or two arguments.');
 
-    if (this.get(id) !== "string" || id.length === 0)
-      throw new Error("A type requires an string id.");
+    if (this.get(id) !== 'string' || id.length === 0)
+      throw new Error('A type requires an string id.');
 
-    if (_customTypes[id] !== undefined && _customTypes[id] !== "proto")
+    if (_customTypes[id] !== undefined && _customTypes[id] !== 'proto')
       throw new Error('The type "' + id + '" already exists.');
 
-    if (__nativeTypes[id])
-      throw new Error('"' + id + '" is a reserved type name.');
+    if (__nativeTypes[id]) throw new Error('"' + id + '" is a reserved type name.');
 
     _customTypes[id] = 1;
 
@@ -433,11 +419,11 @@ function Typology(defs) {
         tmp[a[k]] = 1;
       }
 
-    if (this.get(type) !== "function" && !this.isValid(type))
+    if (this.get(type) !== 'function' && !this.isValid(type))
       throw new Error(
-        "A type requires a valid definition. " +
-          "This one can be a preexistant type or else " +
-          "a function testing given objects."
+        'A type requires a valid definition. ' +
+          'This one can be a preexistant type or else ' +
+          'a function testing given objects.'
       );
 
     // Effectively add the type:
@@ -545,26 +531,21 @@ function Typology(defs) {
 
     const typeOf = __getNativeType(type);
 
-    if (typeOf === "string") {
-      a = type.replace(/^[\?\!]/, "").split(/\|/);
+    if (typeOf === 'string') {
+      a = type.replace(/^[\?\!]/, '').split(/\|/);
       aKeys = Object.keys(a);
       l = aKeys.length;
       for (i = 0; i < l; i++)
-        if (
-          !__nativeTypes[a[aKeys[i]]] &&
-          typeof _customTypes[a[aKeys[i]]] === "undefined"
-        )
+        if (!__nativeTypes[a[aKeys[i]]] && typeof _customTypes[a[aKeys[i]]] === 'undefined')
           return false;
       return true;
-    } else if (typeOf === "object") {
+    } else if (typeOf === 'object') {
       typeKeys = Object.keys(type);
       l = typeKeys.length;
-      for (k = 0; k < l; k++)
-        if (!this.isValid(type[typeKeys[k]])) return false;
+      for (k = 0; k < l; k++) if (!this.isValid(type[typeKeys[k]])) return false;
       return true;
-    } else if (typeOf === "array")
-      return type.length === 1 ? this.isValid(type[0]) : false;
-    else if (typeOf === "function") return true;
+    } else if (typeOf === 'array') return type.length === 1 ? this.isValid(type[0]) : false;
+    else if (typeOf === 'function') return true;
     else return false;
   };
 
@@ -575,18 +556,18 @@ function Typology(defs) {
 
   // Add a type "type" to shortcut the #isValid method:
   this.add(
-    "type",
+    'type',
     function(v) {
       return this.isValid(v);
     }.bind(this)
   );
 
   // Add a type "primitive" to match every primitive types (including null):
-  this.add("primitive", v => v !== Object(v));
+  this.add('primitive', v => v !== Object(v));
 
   // Adding custom types at instantiation:
   defs = defs || {};
-  if (this.get(defs) !== "object") throw Error("Invalid argument.");
+  if (this.get(defs) !== 'object') throw Error('Invalid argument.');
 
   for (let k in defs) this.add(k, defs[k]);
 }
@@ -601,20 +582,19 @@ const types = Typology;
 Typology.call(types);
 
 // Version:
-Object.defineProperty(types, "version", {
-  value: "1.2.1"
+Object.defineProperty(types, 'version', {
+  value: '1.3.0'
 });
 
 /**
  * EXPORT:
  * *******
  */
-if (typeof exports !== "undefined") {
-  if (typeof module !== "undefined" && module.exports)
-    exports = module.exports = types;
+if (typeof exports !== 'undefined') {
+  if (typeof module !== 'undefined' && module.exports) exports = module.exports = types;
   exports.types = types;
-} else if (typeof define === "function" && define.amd)
-  define("typology", [], function() {
+} else if (typeof define === 'function' && define.amd)
+  define('typology', [], function() {
     return types;
   });
 else scope.types = types;
